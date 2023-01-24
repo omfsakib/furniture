@@ -1,0 +1,82 @@
+{% load static %}
+<style>
+    .logo-img{
+        max-width: 100px;
+    }
+    .navbar {
+        position: fixed;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -ms-flex-align: center;
+        align-items: center;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        z-index: 99;
+        width: 100%;
+        background-color: transparent;
+    }
+    .bg-light {
+        background-color: #f8f9fad9!important;
+    }
+    .navbar .btn-primary{
+        background-color: transparent;
+        color: black;
+        border: none;
+    }
+    .navbar .btn-primary .badge-light{
+        background-color: #43f1ffc2;
+        border-radius: 50%;
+        margin-left: -7px;
+        padding: 3px 7px;
+        position: absolute;
+        margin-top: 11px;
+        font-size: 15px;
+    }
+</style>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'noksha:home' %}">
+            <img class="logo-img" src="{% static 'images/logo.png' %}" alt="NOKSHA">
+        </a>
+    
+        <a href="{% url 'noksha:cart' %}" type="button" class="btn btn-primary" >
+            <i class="fa fa-shopping-cart" aria-hidden="true" style="font-size: 25px;"></i> <span class="badge badge-light">{{cartItems}}</span>
+            <span class="sr-only">unread messages</span>
+        </a>
+        <button class="navbar-toggler" type="button" style="font-size: 0.75rem; padding: 2px 5px; justify-self: flex-end;" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <di class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+            <a class="nav-link" href="{% url 'noksha:home' %}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            {% for i in nvCategorys %}
+            <li>
+                <a class="nav-link" href="{% url 'noksha:category_view' i.id %}">{{i.name}}</a>
+            </li>
+            {% endfor %}
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'noksha:account_profile' request.user.id %}">Account</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+            <a class="nav-link" href="#">Login</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="#">Signup</a>
+            </li>
+            {% endif %}
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        </div>
+    </nav>
+</header>

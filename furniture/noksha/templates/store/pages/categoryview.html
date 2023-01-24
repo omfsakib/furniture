@@ -1,0 +1,78 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+<style>
+    .header-fix{
+        height: 100px;
+    }
+    .all-categorys{
+        max-height: 250px;
+        overflow: auto;
+    }
+    .all-categorys ul{
+        list-style: none;
+        margin-left: 0px;
+    }
+    a{
+        color: black;
+    }
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgb(0 0 0);
+    }
+    .sub-categorys{
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 50px;
+    }
+    .sub-categorys .col-sm-2{
+        width: 150px;
+    }
+    .mvcontent{
+        padding: 5px 25px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+    }
+    .mvcontent:hover{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        transition: 0.2s;
+    }
+</style>
+<div class="header-fix"></div>
+<div class="row" style="width: 100%;">
+    <div class="col-sm-3 all-categorys">
+        <h4 class="text-center"> Categories</h4>
+        {% for i in all_categorys %}
+        <ul>
+            <li><a href="{% url 'noksha:category_view' i.category_id %}">{{i.category_name}}</a>
+                {% if i.subcategorys %}
+                <ul>
+                    {% for j in i.subcategorys %}
+                    <li><a href="{% url 'noksha:sub_category_view' j.id %}">{{j.name}}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+        </ul>
+        {% endfor %}
+    </div>
+    <div class="col-sm-9"> <hr>
+        <div class="row sub-categorys">
+            {% for i in subcategorys %}
+            <div class="col-sm-2">
+                <button class="mvcontent">
+                    <a href="{% url 'noksha:sub_category_view' i.id %}">
+                        <img src="{{i.img.url}}" alt="{{i.name}}"> <br>
+                        <p>{{i.name}}</p>
+                    </a>
+                    
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

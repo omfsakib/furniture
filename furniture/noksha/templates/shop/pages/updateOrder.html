@@ -1,0 +1,115 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+<style>
+    .row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.col {
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    max-width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+    margin-bottom: 10px;
+}
+    .card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.card-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.25rem;
+}
+.text-white h5{
+    font-size: 12px;
+}
+.text-white h5,.text-white h3{
+    color: #fff !important;
+}
+</style>
+<div class="container">
+    <div class="main">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="update_order">
+                    <div class="row">
+                        <div class="col">
+                            <div class="col-md">
+                                <div class="card text-center text-white md-3" id="total-orders">
+                                    <a style="color: white !important; text-decoration:none;">
+                                        <div class="card-header">
+                                            <h5 class="card-title">Status</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <select name="status" class="form-control" style="width: 80%; display: inline-block; margin-bottom: 10px;">
+                                                    <option value="">Select status</option>
+                                                    <option value="Customer Confirmed">Pending</option>
+                                                    <option value="Admin Confirmed">Confirm</option>
+                                                    <option value="In-Transit">In-Transit</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Return">Return</option>
+                                                    <option value="Cancel">Cancel</option>
+                                                </select>
+                                                 <button class="btn btn-md btn-success" style="width: auto;">Submit</button>
+                                            </form>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="col-md">
+                                <div class="card text-center text-white md-3" id="total-orders">
+                                    <a style="color: white !important; text-decoration:none;">
+                                        <div class="card-header">
+                                            <h5 class="card-title">Paid</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <input type="number" name="amount" style="width: 80%; display: inline-block; margin-bottom: 10px;" class="form-control" placeholder="Enter amount paid...">
+                                                <button class="btn btn-md btn-success" style="width: auto;">Submit</button>
+                                            </form>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" style="overflow: auto;">
+                {% include 'components/memoTemplate.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

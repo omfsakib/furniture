@@ -1,0 +1,336 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+<style>
+    .submit_btn{
+        display: flex;
+        justify-content: center;
+    }
+    .remove-product,
+    .add-product{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 88%;
+        max-height: 88%;    
+        min-width: 350px;
+        background-color: #ddddddf5;
+        border: 1px solid #eee;
+        box-sizing: border-box;
+        padding: 10px;
+        z-index: 100;
+        display: none;    
+        border-radius: 20px;
+        /*to hide popup initially*/
+    }
+    .close-btn {
+        position: absolute;
+        cursor: pointer;
+        right: 5px;
+        top: 5px;
+        font-size: 26px;
+        width: 26px;
+        background-color: black;
+        color: white;
+        border-radius: 50%;
+        padding: 4px;
+    }
+    .action_button{
+        display: flex;
+        justify-content: center;
+    }
+    .action_button .btn:last-child{
+        margin-left: 10px;
+    }
+    .action_button .btn:first-child{
+        margin-right: 10px;
+    }
+</style>
+<script>  
+    $(document).ready(function(){
+        $('#input-payment-city').hide()
+        $('#input-payment-city').keyup(function() {
+            $('#cityValue').val(this.value)
+        });
+        $('input[type=radio][name=city]').change(function() {
+            if (this.value == 'other') {
+                $('#input-payment-city').show(500)
+            }
+            else if(this.value == 'Dhaka') {
+                $('#input-payment-city').hide(500)
+            }
+        });
+    })
+    async function fetchCustomer(phone){
+        let response = await fetch('/shop/store/customer/'+phone,{
+            method: 'get',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
+            }
+        })
+        let data = await response.json()
+        $('.customer_name').attr('value',await data['customer']['name'])
+        $('.customer_email').attr('value',await data['customer']['email'])
+        $('.billing_address').attr('value',await data['customer']['address'])
+        $('.billing_area').attr('value',await data['customer']['area'])
+        if(await data['customer']['city'] == 'Dhaka'){
+            $('.city_dhaka').attr('checked','checked')
+        }
+        else if(await data['customer']['city'] == ''){
+            return false
+        }
+        else{
+            $('.city_other').attr('type','radio')
+            $('.city_other').attr('name','city')
+            $('.city_other').attr('checked','checked')
+            $('.city_other').attr('value',await data['customer']['city'])
+            $('.city_other_value').html(await data['customer']['city'])
+        }
+        // $('.shopnow_estimated_category').html(await data['shopnow']['estimated_category'])
+        // $('.shopnow_estimated_category_input').val(await data['shopnow']['category_id'])
+    }
+    function productAdd(id) {
+        $('.product_id').attr('value',id)
+        $(".add-product").toggle();
+    }
+    function removeItem(id) {
+        $('.delete-item').attr('value',id)
+        $(".remove-product").toggle();
+    }
+</script>
+<div class="remove-product" style="overflow: auto;">
+    <div onclick="removeItem()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Remove</h3>
+            <h4>Are you sure to remove this Item?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="remove-item" value="" class="btn btn-danger delete-item">Yes</button>
+            </form>
+            <button onclick="removeItem()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+
+<div class="add-product" style="overflow: auto;">
+    <div onclick="productAdd()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" class="product_id" name="product_id" value="">
+            <div class="form-group required">
+                <label class="control-label">Quantity</label>
+                <input type="number" name="quantity" value="1"  class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Size</label>
+                <select name="size" class="form-control">
+                    {% for size in sizes %}
+                    <option value="{{size.size}}">{{size.size}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Color</label>
+                <select name="color" class="form-control">
+                    {% for color in colors %}
+                    <option value="{{color.color}}">{{color.color}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="action_button">
+                <button type="submit" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Add </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="main">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="heading text-center">
+                    <h3>Offline Order</h3>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="product-heading text-center">
+                    <h3>Select Products</h3>
+                </div>
+                <div class="table-responsive" style="overflow: auto;height: 300px;">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="5"><input type="text" placeholder="Search products...." class="form-control"></th>
+                            </tr>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td style="width: 50px;">
+                                    <img src="{{product.image_1}}">
+                                </td>
+                                <td>{{product.name}}</td>
+                                <td>{{product.product_code}}</td>
+                                <td>{{product.price|floatformat:0}}&#2547;</td>
+                                <td><button type="button" class="btn btn-success" onclick="productAdd('{{product.id}}')"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="customer-heading text-center">
+                    <h3>Customer details</h3>
+                </div>
+                <div class="row">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="col-sm-6">
+                            <div class="customer_details">
+                                <div class="form-group required">
+                                    <label class="control-label">Telephone</label>
+                                    <input type="text" name="phone" onchange="fetchCustomer(this.value)" value="" placeholder="Telephone" class="form-control" required >
+                                </div>
+                                <div class="form-group required">
+                                    <label class="control-label">Full Name</label>
+                                    <input type="text" name="name" value="" placeholder="Full Name"  class="form-control customer_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">E-Mail (optional)</label>
+                                    <input type="text" name="email" value="" placeholder="E-Mail" class="form-control customer_email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="billing_details">
+                                <div class="form-group required">
+                                    <label class="control-label" for="input-payment-address-1">Address </label>
+                                    <input type="text" name="address" placeholder="Address ..." id="input-payment-address-1" class="form-control billing_address" required >
+                                </div>
+                                <div class="form-group required">
+                                    <label class="control-label" for="input-payment-postcode">Area</label>
+                                    <input type="text" name="area" value="" placeholder="Area ...." id="input-payment-postcode" class="form-control billing_area" required >
+                                </div>
+                                <div class="form-group required">
+                                    <label class="control-label" for="input-payment-city">City</label><br>
+                                    <input type="radio" class="city_dhaka" name="city"  value="Dhaka" style="margin-right:5px;" >Dhaka</input> <br>
+                                    <input type="radio" name="city" id="cityValue" style="margin-right:5px;" value="other">Other</input>  <br>
+                                    <input type="text"  placeholder="Enter City ...." id="input-payment-city" class="form-control">
+                                    <input type="hidden" class="city_other" name=""  value="" style="margin-right:5px;" ><span class="city_other_value"></span></input> 
+        
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="submit_btn">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="cart-heading text-center">
+                    <h3>Shopping Cart : {{total_items}} items</h3>
+                </div>
+                <div class="cart-table">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Qty</th>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </thead>
+                            <tbody>
+                                {% for item in viewItems %}
+                                <tr>
+                                    <td style="width: 50px;">
+                                        {% for i in item.image %}
+                                            <img src="{{i.n_img.url}}">
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{item.product.name}}</td>
+                                    <td>{{item.quantity}}</td>
+                                    <td>{{item.size}}</td>
+                                    <td>{{item.color}}</td>
+                                    <td>{{item.rate|floatformat:0}}&#2547;</td>
+                                    <td>{{item.total|floatformat:0}}&#2547;</td>
+                                    <td><button type="button" class="btn btn-danger" onclick="removeItem('{{item.id}}')"><i class="fa fa-minus" aria-hidden="true"></i></button></button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="method-heading text-center">
+                    <h3>Method & Paid</h3>
+                </div>
+                <div class="table-responsive" style="border: none;">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Method :</td>
+                                    <td>
+                                        <input type="radio" name="payment_method" value="cod">Cash on Delivery</input> <br>
+                                        <input type="radio" name="payment_method" value="bkash">Bkash</input> <br>
+                                        <input type="radio" name="payment_method" value="nagad">Nagad</input> <br>
+                                        <input type="radio" name="payment_method" value="rocket">Rocket</input>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Paid : </td>
+                                    <td><input type="number" name="paid_amount" value="0" class="form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center" colspan="2">
+                                        <button type="submit" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Update</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            {% if viewOrder.total > 0 and viewOrder.method and viewOrder.address %}
+            <div class="col-sm-12">
+                <div class="content" style="display: flex; justify-content:center">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" name="confirm_order" class="btn btn-success">Confim Order</button>
+                    </form>
+                </div> <br> <hr>
+            </div>
+            {% endif %}
+            <div class="col-sm-12" style="overflow: auto;">
+                {% include 'components/memoTemplate.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

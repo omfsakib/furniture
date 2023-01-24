@@ -1,0 +1,502 @@
+.fix-header.hozmenu-container{
+	padding: 0 15px;
+}
+.hozmenu-container{
+	padding-left: 0;
+}
+.hozmenu-container:not(.fix-header) .pt_custommenu > .container{
+	width: 100%;
+	padding: 0;
+}
+.pt_custommenu {
+    font-size: 14px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 90;
+    display: inline-block;
+}
+.pt_custommenu div.pt_menu {
+    display: inline-block;
+}
+.pt_custommenu div.pt_menu  .parentMenu {
+	bottom:-2px;
+}
+.pt_custommenu div.pt_menu .parentMenu a,
+.pt_custommenu div.pt_menu .parentMenu span.block-title{
+	color: #666666;
+    display: block;
+    font-size: 22px;
+    padding: 0 20px 8px;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+div.pt_menu .parentMenu a, .parentMenu .block-title {
+    color: #666;
+    font-size: 18px;
+}
+.pt_custommenu div.popup {
+    position:absolute;
+    z-index:3000;
+    text-align:left;
+    margin: 0;	
+}
+.pt_custommenu div.popup a {
+    text-decoration: none;
+    display:block;
+}
+.pt_custommenu .itemMenu h4.level2,.pt_custommenu .itemMenu a.level2 {
+    color: #444444;
+    font-size: 16px;
+    text-transform: capitalize;
+}
+.pt_custommenu div.pt_menu.act .itemSubMenu .itemMenuName{ color: #7a7a7a;}
+.pt_custommenu .itemSubMenu h4.level2,
+.pt_custommenu .itemSubMenu a.level2,
+.pt_custommenu .itemSubMenu h4.level3,
+.pt_custommenu .itemSubMenu a.level3,
+.pt_custommenu .itemMenu .level1 a.level2{
+    color: #555555;
+    font-size: 13px;
+    font-weight: normal;
+    padding-left: 35px;
+    text-transform: none;
+}
+.pt_custommenu div.popup a.level1 {
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: #292929;
+	padding-bottom: 20px;
+	line-height: 1;
+}
+.pt_custommenu div.popup a.act {
+}
+.pt_custommenu div.column {
+    float: left;
+    margin-right: 5px;
+    padding-right: 5px;
+    width: 160px;
+}
+.pt_custommenu div.blockright {
+	width:300px;
+    float: right
+}
+.pt_custommenu div.popup .blockright img {
+    max-width: 100%;
+}
+.pt_custommenu div.column.last {
+    border-right: 0 none;
+}
+.pt_custommenu .block2{
+    margin-top: 10px;
+    float: left;
+}
+#block2_pt_item_menu_custom_menu {
+    width: 700px;
+	padding:0;
+}
+.static-menu-img {
+    margin: 0 20px 0 0;
+	width:40%;
+	float:left;
+}
+.pt_custommenu div.popup .block1{
+    overflow: hidden;
+    float: left;
+}
+#block2_pt_item_menu_custom_menu .content-custom {
+	font-size:14px;
+	color:#444444;
+	font-weight:normal;
+	line-height:20px;
+	margin:10px 0 0;
+	float:left;
+	width:50%;
+}
+.pt_custommenu div.popup .block1 .column{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+.pt_custommenu div.popup .blockright img{
+    max-width: 100%;
+} 
+.pt_custommenu div.pt_menu .parentMenu p{
+    margin: 0;
+    padding: 0;
+}
+.pt_custommenu #pt_menu_link{
+    padding: 0;
+}
+.pt_custommenu #pt_menu_link .parentMenu ul li{
+    float: left;
+    list-style: none;
+}
+.pt_custommenu #pt_menu_link .parentMenu ul li a{
+    float: left;
+    padding: 0 10px;
+    display: block;
+}
+.pt_custommenu .clearBoth {
+    clear:both;
+}
+/*mobile menu*/
+/*------Accordion ---------*/
+/********** < Navigation */
+.nav-collapse {
+    text-align: left;
+}
+.navbar .nav > li {
+    padding: 10px 30px 20px 0;
+}
+#ma-mobilemenu {
+    top: 100%;
+	left: 0;
+    margin:0;
+    width: 100%;
+	position: absolute;
+	z-index: 3;
+	box-shadow: 0 0 5px 0 rgba(0,0,0,.1) !important;
+}
+.nav-collapse, .nav-collapse.collapse {
+}
+.navbar-inner {
+    border: 0;
+    border-radius: 0;
+}
+.navbar .btn-navbar .icon-bar{
+	background: #292929
+}
+.navbar .btn-navbar:hover .icon-bar{
+	background: #ee3333 !important;
+}
+.navbar .btn-navbar{
+	border: none;
+	float: left;
+	padding: 0 0 0px 0;
+	height: auto;
+	box-shadow: none !important;
+	background: none !important;
+	margin: 5px 0 20px;
+}
+.navbar .btn-navbar:hover{
+	background: none !important;
+}
+.mobilemenu>li.last a {
+    border-bottom: 0;
+}
+.mobilemenu {
+	list-style-type: none;
+	padding: 0;
+    margin: 0;
+}
+.mobilemenu ul {
+	padding: 0;
+	margin: 0;
+	display: block;
+	width: 100%;
+}
+.mobilemenu ul{
+	padding: 0 15px;
+}
+.mobilemenu .level2{
+    padding: 0 15px;
+}
+.mobilemenu li {
+	background: #faf8f8;
+	cursor: pointer;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	display: block;
+	width: 100%;
+	position: relative;
+	border-radius: 0 !important;
+}
+.mobilemenu li.level2.last {
+    margin-bottom: 20px;
+}
+.mobilemenu li.active>a {
+	/*background: url('../images/close.gif') no-repeat center right;*/
+}
+.mobilemenu li div {
+	padding: 20px;
+	background: #aef;
+	display: block;
+	clear: both;
+	float: left;
+	width: 360px;
+}
+.mobilemenu a {
+    border-bottom: 1px solid #E1E4EB;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 40px;
+    margin: 0 15px;
+    text-decoration: none;
+    text-transform: capitalize;
+}
+.mobilemenu li:last-child a{
+	border: none;
+}
+.mobilemenu ul ul a, .mobilemenu ul li.active ul a {
+	/* color: #666 !important; */
+}
+.mobilemenu ul ul ul a, .mobilemenu ul ul li.active ul a {
+	color: #666 !important;
+}
+
+.mobilemenu ul ul ul ul a, .mobilemenu ul ul ul li.active ul a {
+	color: #666 !important;
+}
+.mobilemenu li.active>ul {
+
+}
+.mobilemenu ul ul a {
+	padding-left: 15px;
+}
+.mobilemenu ul ul ul a {
+	padding-left: 30px;
+}
+.mobilemenu ul ul ul ul a {
+	padding-left: 45px;
+}
+.mobilemenu ul ul ul ul ul a {
+	padding-left: 60px;
+}
+/*----------- button mobilemenu -------------*/
+.mobilemenu span.ttclose,.mobilemenu span.ttopen {
+	position: absolute;
+	top: 0px;
+	right: 8px;
+    padding: 13px 0;
+}
+.mobilemenu span.ttclose a { 
+	background: url("../images/menu_down.png") no-repeat scroll 50% 50%;
+	 border: 0 none;
+    color: #333333;
+    display: block;
+    height: 15px;
+    padding: 0;
+    width: 15px;
+}
+.mobilemenu span.ttopen a { 
+	background: url("../images/menu_up.png") no-repeat scroll 50% 50%;
+	 border: 0 none;
+    color: #333333;
+    display: block;
+    height: 15px;
+    padding: 0;
+    width: 15px;
+}
+.mobilemenu span.no-close a,.mobilemenu ul li ul span.ttclose a { background:none; }
+.mobilemenu span.up a { 
+	background: url("../images/menu_up.png") no-repeat scroll 50% 50%;
+}
+/*.mobilemenu span.head a:hover*/
+.mobilemenu li.active>span.ttclose a {
+	background: url(../images/menu_up.png) no-repeat 50% 50%;
+}
+.mobilemenu li.selected span.ttclose a {
+	background: url(../images/menu_up.png) no-repeat 50% 50%;
+}
+.menu-mobile {
+    display: inline-block;
+	width: 100%;
+	border-radius: 0px;
+	float: left;
+}
+/** hozmegamenu **/
+#pt_custommenu {
+    position: relative;
+    z-index: 111;
+	width: 100%;
+}
+#pt_custommenu .parentMenu{
+    bottom:0
+}
+.pt_custommenu div.pt_menu .parentMenu {
+    padding: 0px;
+}
+.pt_menu_had_child .parentMenu > a{
+	position: relative;
+}
+.pt_menu_had_child.active .parentMenu > a::before,
+.pt_menu_had_child .parentMenu > a:hover::before{
+	color: #ee3333 !important;
+}
+.pt_menu_had_child .parentMenu > a::before{
+	position: absolute;
+	content: "\f123";
+	font-family: Ionicons;
+	color: #292929;
+	font-size: 8px;
+	right: -15px;
+	line-height: 1;
+	margin-top: 7px;
+	border-color: #292929 !important;
+}
+.pt_custommenu div.pt_menu .parentMenu a,
+.pt_custommenu div.pt_menu .parentMenu span.block-title {
+    font-size: 12px !important;
+    text-decoration: none;
+    display: block;
+    color: #292929 !important;
+    text-transform: uppercase !important;
+    margin: 0 25px !important;
+	padding: 0 0 40px 0 !important;
+	position: relative;
+	font-weight: 600;	
+}
+.fix-header .pt_custommenu div.pt_menu .parentMenu a,
+.fix-header .pt_custommenu div.pt_menu .parentMenu span.block-title {
+	padding: 0 0 10px 0 !important;
+}
+#pt_custommenu .pt_menu:first-child a{
+	margin-left: 0 !important
+}
+.pt_custommenu div.popup{
+    margin: 0 !important;    
+	background: none;
+}
+.pt_custommenu div.popup .inner-popup img:hover{
+	opacity: .9;
+}
+.pt_custommenu div.popup .inner-popup::before{
+	/* content: ""; */
+	/* position: fixed; */
+	/* top: 0; */
+	/* left: 0; */
+	/* right: 0; */
+	/* bottom: 0; */
+	/* background: rgba(0,0,0,.3); */
+	/* z-index: -1; */
+}
+.pt_custommenu div.popup .inner-popup{
+	padding: 45px;
+	background: #fff;
+	box-shadow: 5px 5px 7px 0px rgba(41, 41, 41, 0.05);
+	float: left;
+	width: 100%;
+	position: relative;
+}
+.pt_custommenu div.popup .block1 {
+    overflow: hidden !important;
+    float: left !important;
+    padding: 0px !important;
+    border-top: medium none !important;    
+}
+.pt_custommenu .popup a:hover {
+    color: #ee3333 !important;
+}
+.pt_custommenu .itemMenu.level1 a.itemMenuName.level2.actParent:hover{
+	/* color: #fff !important; */
+}
+.pt_custommenu .itemMenu.level1 a.itemMenuName.level2 {
+    font-size: 12px !important;
+    text-transform: capitalize !important;
+    cursor: pointer !important;
+	color: #707070;
+	padding: 7px 0;
+}
+.pt_custommenu .itemMenu.level1 a.itemMenuName.level2:last-child {
+	margin-bottom: 0 !important;
+}
+.pt_custommenu .itemMenu.level1 .itemSubMenu.level2{
+  ;
+}
+.pt_custommenu .itemMenu.level1 .itemSubMenu.level2 .itemMenuName.level2:last-child{
+	background: none;
+}
+.pt_custommenu .itemMenu.level1 .itemSubMenu.level2 .itemMenuName.level2{
+  color: #707070;
+  font-weight: 400 !important;
+  padding: 10px 0;
+  font-size: 12px !important;
+  text-transform: capitalize !important;
+  border: none;
+  margin: 0;
+}
+/* .pt_custommenu .itemMenu.level1 .itemSubMenu.level2 .itemMenuName.level2:hover::before{ */
+	/* color: #ee3333; */
+/* } */
+/* .pt_custommenu .itemMenu.level1 .itemSubMenu.level2 .itemMenuName.level2::before{ */
+	/* content: "\f101"; */
+	/* margin-right: 5px; */
+	/* font-family: FontAwesome; */
+	/* color: #6f6f6f; */
+/* } */
+.pt_custommenu .itemMenu.level1 .itemSubMenu.level2 .itemMenuName.level2:last-child{
+	border: none;
+}
+.pt_custommenu div.pt_menu .parentMenu a:hover,
+.pt_custommenu div.pt_menu .parentMenu span.block-title:hover,
+.pt_custommenu #pt_menu_link .parentMenu ul li a.act,
+.pt_custommenu #pt_menu_link .parentMenu ul li a:hover,
+.pt_custommenu div.pt_menu.act .parentMenu a::before,
+.pt_custommenu div.pt_menu.act .parentMenu a,
+.pt_custommenu div.pt_menu.active .parentMenu a{
+	color: #ee3333 !important;
+	border-color: #ee3333;
+}
+.pt_custommenu div.pt_menu.pt_menu_had_child.active .parentMenu a::after,
+.pt_custommenu div.pt_menu.pt_menu_had_child .parentMenu a:hover::after{
+	/* display: inline-block; */
+}
+.pt_custommenu div.pt_menu.pt_menu_had_child .parentMenu a::after {
+    /* content: "/"; */
+    /* display: none; */
+    /* font-family: FontAwesome; */
+    /* color: #444444; */
+    /* position: absolute; */
+    /* right: 0px; */
+	/* left: 0; */
+	/* bottom: 0; */
+    /* margin: 0px auto; */
+    /* text-align: center; */
+}
+/*hozmobile*/
+.ma-nav-mobile-container{
+	display: none;
+}
+.ma-nav-mobile-container .navbar{
+  border: none;
+  background: none;
+  border-radius: 0;
+  min-height: auto;
+  margin: 0;
+}
+#ma-mobilemenu{
+  background: #fff;
+}
+.navbar .brand {
+    color: #FFF;
+    text-transform: uppercase;
+    padding: 18px 0px;
+	display: none;
+}
+/** /hozmegamenu **/
+/* responsive */
+@media(max-width: 1024px){
+	.pt_custommenu div.pt_menu .parentMenu a, 
+	.pt_custommenu div.pt_menu .parentMenu span.block-title{
+		padding: 0 0 20px 0 !important;
+	}
+}
+@media(max-width: 768px){
+	.navbar .btn-navbar{
+		margin: 20px 0;
+	}	
+}
+@media(max-width: 991px){
+	.ma-nav-mobile-container {
+		display: block;
+	}
+}
+@media(max-width: 640px){
+	.navbar .btn-navbar{
+		margin-top: -20px;
+	}
+}

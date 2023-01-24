@@ -1,0 +1,98 @@
+{% extends 'store/main.html' %}
+{% block content %}
+<style>
+    .header-fix{
+        height: 100px;
+    }
+</style>
+<div class="header-fix"></div>
+{% if cartItems <= 0 %}
+<div id="error-not-found" class="container">
+    <h1>Shopping Cart</h1>
+    <p>Your shopping cart is empty!</p>
+    <div class="buttons clearfix">
+        <div class="pull-right">
+            <a href="{% url 'noksha:home' %}" class="btn btn-primary">Continue</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container-fluid">
+    <div class="row">
+        <aside class="col-lg-9">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-shopping-cart">
+                        <thead class="text-muted">
+                            <tr class="small text-uppercase">
+                                <th scope="col">Product</th>
+                                <th scope="col" width="120">Quantity</th>
+                                <th scope="col" width="120">Price</th>
+                                <th scope="col" class="text-right d-none d-md-block" width="200"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>
+                                    <figure class="itemside align-items-center">
+                                        <div class="aside">
+                                            {% for i in item.image %}
+                                    <img src="{{i.n_img.url}}" alt="{{item.product.name}}" class="img-sm" title="{{item.product.name}}" class="img-thumbnail">
+                                    {% endfor %}</div>
+                                        <figcaption class="info"> <a href="{% url 'noksha:product_view' item.product.id %}" class="title text-dark" data-abc="true">{{item.product.name}}</a>
+                                            <p class="text-muted small">SIZE: {{item.size}} <br> COLOR: {{item.color}}</p>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td> <button type="button" style="float: left;" class="btn update-cart" data-product="{{item.product.id}}" data-action="remove"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                    <p style="float: left; padding: 5px;">{{item.quantity}}</p>
+                                    <button style="float: left;" type="button" data-product="{{item.product.id}}" data-action="add"  class="btn update-cart"><i class="fa fa-plus" aria-hidden="true"></i></button> </td>
+                                <td>
+                                    <div class="price-wrap"> <var class="price">{{item.get_total|floatformat:0}}&#2547;</var> <small class="text-muted"> {{item.product.price|floatformat:0}}&#2547; each </small> </div>
+                                </td>
+                                <td class="text-right d-none d-md-block"> <a class="btn btn-light update-cart" style="color: #fff;" data-abc="true" data-product="{{item.product.id}}" data-action="delete"> Remove</a> </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </aside>
+        <aside class="col-lg-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group"> <label>Have coupon?</label>
+                            <div class="input-group"> <input type="text" class="form-control coupon" name="coupon" placeholder="Coupon code"> <span class="input-group-append"> <button type="submit" class="btn btn-primary btn-apply coupon">Apply</button> </span> </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <dl class="dlist-align">
+                        <dt>Total price:</dt>
+                        <dd class="text-right ml-3">{{cartTotal|floatformat:0}}&#2547;</dd>
+                    </dl>
+                    <dl class="dlist-align">
+                        <dt>Charges (Inside Dhaka):</dt>
+                        <dd class="text-right text-dark ml-3">+ {{delivery_charge|floatformat:0}}&#2547;</dd>
+                    </dl>
+                    <dl class="dlist-align">
+                        <dt>Discount:</dt>
+                        <dd class="text-right text-danger ml-3">- {{order.cupon_amount|floatformat:0}}&#2547;</dd>
+                    </dl>
+                    <dl class="dlist-align">
+                        <dt>Total:</dt>
+                        <dd class="text-right text-dark b ml-3"><strong>{{total|floatformat:0}}&#2547;</strong></dd>
+                    </dl>
+                    <hr> <a href="{% url 'noksha:checkout' %}" class="btn btn-out btn-primary btn-square btn-main" data-abc="true"> Make Purchase </a> <a href="{% url 'noksha:home' %}" class="btn btn-out btn-success btn-square btn-main mt-2" data-abc="true">Continue Shopping</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

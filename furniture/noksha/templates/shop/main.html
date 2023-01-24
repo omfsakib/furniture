@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>H A S H T A G</title>
+
+    {% include 'shop/components/links.html' %}
+    
+
+    <style>
+        
+        #preloader {
+            background-color: #ffffff73;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+
+        #status {
+            background-image: url('/static/images/AjaxLoader.gif');
+            background-repeat: no-repeat;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -35px;
+            margin-left: -35px;
+        }
+        #orders-cancel {
+            background-color: #ee3333;
+        }
+        #orders-return {
+            background-color: #eeb133;
+        }
+        
+    </style>
+    <script>
+        /* =========================================
+                Preloader
+        ============================================ */
+        $(window).on('load', function () { // makes sure that whole site is loaded
+            $('#status').fadeOut();
+            $('#preloader').delay(350).fadeOut('slow');
+        });
+
+    </script>
+</head>
+{% if messages %}
+{% for message in messages %}
+<div class="container-fluid p-0">
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="True">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<body>
+    <div id="preloader">
+        <div id="status">&nbsp;</div>
+    </div>
+    {% load static %}
+
+<style>
+    #logo a img {
+        width: 85px;
+    }
+    #logo{
+        margin-top: -15px;
+    }
+    .has-scroll .table tbody tr td a img{
+        max-width: 55px;
+    }
+    .text-left span{
+        font-size: 10px;
+    }
+    .breadcrumbs {
+        display: none;
+    }
+</style>
+<header>
+	<div class="container-fix">
+        <div class="logo-container pull-left">
+            <div id="logo">
+                <a href="{% url 'noksha:shop_dashboard' %}">
+                    <img src="{% static 'images/logo.png' %}" title="H A S H T A G" alt="H A S H T A G" class="img-responsive" />
+                </a>
+            </div>
+        </div>
+        	
+	    <div class="block-right pull-right">
+            <div class="search-containers pull-right" style="margin-right: 12px;">
+                <div class="search-container">
+                    <a href="{% url 'noksha:logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                </div>
+            </div>	
+            <div class="search-containers pull-right" style="margin-right: 12px;">
+                <div class="search-container">
+                    <a href="http://127.0.0.1:8000/admin"><i class="fa fa-indent" aria-hidden="true"></i></a>
+                </div>
+            </div>	
+            <div class="search-containers pull-right" style="margin-right: 12px;">
+                <div class="search-container">
+                    <a href="{% url 'noksha:home' %}"><i class="fa fa-globe" aria-hidden="true"></i></a>
+                </div>
+            </div>			
+        </div>	
+	    <div class="container">
+		    <div class="main-menu">
+				<div class="hozmenu-container">
+	                <div class="ma-nav-mobile-container">
+		                <div class="hozmenu">
+			                <div class="navbar">
+				                <div id="navbar-inner" class="navbar-inner navbar-inactive">
+						            <div class="menu-mobile">
+							            <a class="btn btn-navbar navbar-toggle">
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                        </a>
+                                        <span class="brand navbar-brand">Menu</span>
+                                    </div>
+				
+					                <ul id="ma-mobilemenu" class="mobilemenu nav-collapse collapse">
+                                        <li>
+                                            <a href="{% url 'noksha:shop_dashboard' %}">Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'noksha:products' %}">Products</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'noksha:shop_blogs' %}">Blogs</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'noksha:store_setting' %}">Store Settings</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'noksha:create_order' %}">Create Order</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'noksha:control_panel' %}">Control Panel</a>
+                                        </li>
+                                    </ul> 
+				
+			                    </div>
+			                </div>
+		                </div>
+	                </div>
+                    <div class="nav-container visible-lg visible-md">		
+		                <div id="pt_custommenu" class="pt_custommenu">
+				            <div id="pt_menu_home" class="pt_menu">
+                                <div class="parentMenu">
+                                    <a href="{% url 'noksha:shop_dashboard' %}">
+                                        <span>Dashboard</span>
+                                    </a>
+                                </div>
+                            </div>
+				            <div id="pt_menu_home" class="pt_menu">
+                                <div class="parentMenu">
+                                    <a href="{% url 'noksha:products' %}">
+                                        <span>Products</span>
+                                    </a>
+                                </div>
+                            </div>
+				            <div id="pt_menu_home" class="pt_menu">
+                                <div class="parentMenu">
+                                    <a href="{% url 'noksha:shop_blogs' %}">
+                                        <span>Blogs</span>
+                                    </a>
+                                </div>
+                            </div>
+				            <div id="pt_menu_home" class="pt_menu">
+                                <div class="parentMenu">
+                                    <a href="{% url 'noksha:store_setting' %}">
+                                        <span>Store Settings</span>
+                                    </a>
+                                </div>
+                            </div>
+				            <div id="pt_menu_home" class="pt_menu">
+                                <div class="parentMenu">
+                                    <a href="{% url 'noksha:create_order' %}">
+                                        <span>Create Order</span>
+                                    </a>
+                                </div>
+                            </div>
+				            <div id="pt_menu_home" class="pt_menu">
+                                <div class="parentMenu">
+                                    <a href="{% url 'noksha:control_panel' %}">
+                                        <span>Control Panel</span>
+                                    </a>
+                                </div>
+                            </div>
+		                </div>
+	                </div>
+                </div>
+                <div id="sticky-menu" data-sticky="1"></div>
+			</div>
+	    </div>
+	</div>
+</header>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

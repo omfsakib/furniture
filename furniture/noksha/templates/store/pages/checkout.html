@@ -1,0 +1,626 @@
+{% extends 'store/main.html' %}
+
+{% load static %}
+{% block content %}
+<style>
+    .checkout_profile{
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        height: 140px;
+    }
+    .checkbox_gateway {
+        margin-top: 20px !important;
+    }
+    .gateway_img{
+        height: 50px;
+    }
+    #payment_gateway{
+        text-transform: uppercase;
+        background-color: #fff;
+        width: auto;
+        border: none;
+    }
+    .img-link img{
+        max-height: 90px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#bkash_info").hide()
+        $("#nagad_info").hide()
+        $("#rocket_info").hide()
+        $("#transaction_details").hide()
+        $('#input-payment-city').hide()
+        $('#input-payment-city').keyup(function() {
+            $('#cityValue').val(this.value)
+        });
+
+        if ($('#payment_gateway').val() == ''){
+            $('#payment_confirm').hide()
+        }
+
+
+        $('input[type=radio][name=city]').change(function() {
+            if (this.value == 'other') {
+                $('#input-payment-city').show(500)
+            }
+            else if(this.value == 'Dhaka') {
+                $('#input-payment-city').hide(500)
+            }
+        });
+
+        $('input[type=radio][name=method]').change(function() {
+        if (this.value == 'bkash') {
+            $("#bkash_info").show(1000)
+            $("#nagad_info").hide(1000)
+            $("#rocket_info").hide(1000)
+            $("#transaction_details").show(1000)
+            $("#method_value").val('bkash')
+            $("#payment_gateway").val('bkash')
+            $('#payment_confirm').show(500)
+        }
+        else if(this.value == 'cod') {
+            $("#bkash_info").hide(1000)
+            $("#nagad_info").hide(1000)
+            $("#rocket_info").hide(1000)
+            $("#transaction_details").hide(1000)
+            $("#method_value").val('cod')
+            $("#payment_gateway").val('cod')
+            $('#payment_confirm').show(500)
+        }
+        else if(this.value == 'nagad') {
+            $("#bkash_info").hide(1000)
+            $("#nagad_info").show(1000)
+            $("#rocket_info").hide(1000)
+            $("#transaction_details").show(1000)
+            $("#method_value").val('nagad')
+            $("#payment_gateway").val('nagad')
+            $('#payment_confirm').show(500)
+        }
+        else if(this.value == 'rocket') {
+            $("#bkash_info").hide(1000)
+            $("#nagad_info").hide(1000)
+            $("#rocket_info").show(1000)
+            $("#transaction_details").show(1000)
+            $("#method_value").val('rocket')
+            $("#payment_gateway").val('rocket')
+            $('#payment_confirm').show(500)
+        }
+    });
+});
+</script>
+<style>
+    #input-size,#input-color {
+        width: 90px;
+        height: 54px;
+        border: 1px solid #ebebeb;
+        font-size: 14px;
+        color: #292929;
+        font-family: 'Karla', sans-serif;
+    }
+    .scroll-bar-image::-webkit-scrollbar {
+        display: none;
+    }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+    .scroll-bar-image {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    #myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    }
+
+    #myImg:hover {opacity: 0.7;}
+
+        /* The Modal (background) */
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (Image) */
+    .modal-content {
+    margin: auto;
+    display: block;
+    max-height: 90%;
+    max-width: 700px;
+    }
+
+    /* Add Animation - Zoom in the Modal */
+    .modal-content{
+    animation-name: zoom;
+    animation-duration: 0.6s;
+    }
+
+    @keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+    }
+
+    /* The Close Button */
+    .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    opacity: 1;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    }
+
+    /* 100% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px){
+    .modal-content {
+        max-height: 90%;
+    }
+    .close{
+        top:30px;
+        right: 15px;
+    }
+    }
+    .panel-group {
+    margin-bottom: 20px;
+}
+.panel-group .panel {
+    margin-bottom: 0;
+    border-radius: 4px;
+}
+
+.panel-default {
+    border-color: #ddd;
+}
+.panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+}
+.panel-default>.panel-heading {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+.panel-group .panel-heading {
+    border-bottom: 0;
+}
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: inherit;
+}
+.panel-title>.small, .panel-title>.small>a, .panel-title>a, .panel-title>small, .panel-title>small>a {
+    color: inherit;
+}
+.panel-default>.panel-heading+.panel-collapse>.panel-body {
+    border-top-color: #ddd;
+}
+
+.panel-group .panel-heading+.panel-collapse>.list-group, .panel-group .panel-heading+.panel-collapse>.panel-body {
+    border-top: 1px solid #ddd;
+}
+.panel-body {
+    padding: 15px;
+}
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+    .header-fix{
+        height: 100px;
+    }
+</style>
+<div id="myModal" class="modal">
+
+    <!-- The Close Button -->
+    <span class="close">&times;</span>
+  
+    <!-- Modal Content (The Image) -->
+    <img class="modal-content" id="img01">
+  
+  </div>
+<script>
+    
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("img01");
+
+    function imagePopUP(param) {
+        modal.style.display = "block";
+        modalImg.src = $(param).attr('value');
+    }
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+    modal.style.display = "none";
+    }
+</script>
+
+<div class="header-fix"></div>
+<div id="checkout-checkout" class="container">
+    <div class="row">
+        <div id="content" class="col-sm-12">
+            <h1>Checkout</h1>
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a href="#collapse-checkout-option" data-toggle="collapse" data-parent="#accordion" class="accordion-toggle" aria-expanded="true">Step 1: Checkout Options <i class="fa fa-caret-down"></i></a>
+                          
+                        </h4>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <div class="panel-collapse collapse" id="collapse-checkout-option" aria-expanded="false" style="height: 0px;">
+                    {% else %}
+                    <div class="panel-collapse collapse in" id="collapse-checkout-option" aria-expanded="true">
+                    {% endif %}
+                        <div class="panel-body">
+                            <div class="row">
+                                {% if request.user.is_authenticated %}
+                                <div class="col-sm-6">
+                                    <h2>Customer</h2>
+                                    <p>Checkout Options:</p>
+                                    <div class="radio">
+                                        <label>         
+                                            <input type="radio" name="account" value="register" checked="checked">
+                                            <a href="">{{request.user.first_name}} {{request.user.last_name}}</a>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    
+                                    <p>You are interecting as <a href="">{{request.user.first_name}} {{request.user.last_name}}</a>. Click continue to process with this account.</p>
+                                    <a type="button" href="#collapse-payment-address" data-toggle="collapse" data-parent="#accordion" class="accordion-toggle" aria-expanded="true" id="button-account"  class="btn btn-primary">Continue</a>
+                                
+                                 </div>
+                                {% else %}
+                                <div class="col-sm-6">
+                                    <h2>New Customer</h2>
+                                    <p>Checkout Options:</p>
+                                    <div class="radio">
+                                        <label>         
+                                            <input type="radio" name="account" value="register" checked="checked">
+                                            Register Account
+                                        </label>
+                                    </div>
+                                    <p>By creating an account you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.</p>
+                                    <a type="button" href="#collapse-payment-address" data-toggle="collapse" data-parent="#accordion" class="accordion-toggle btn btn-outline-info" aria-expanded="true" id="button-account"  class="btn btn-primary">Continue</a>
+                                </div>
+                                <div class="col-sm-6">
+                                    <h2>Returning Customer</h2>
+                                    <p>I am a returning customer</p>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label class="control-label" for="input-email">Username/Phone Number</label>
+                                            <input type="text" name="login_username" value="" placeholder="Username/Phone Number" class="form-control" required >
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="input-password">Password</label>
+                                            <input type="password" name="login_password" value="" placeholder="Password" class="form-control" required >
+                                            <a href="#">Forgotten Password</a>
+                                        </div>
+                                        <input type="submit" value="Login"   class="btn btn-primary">
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a href="#collapse-payment-address" data-toggle="collapse" data-parent="#accordion" class="accordion-toggle" aria-expanded="true">Step 2: Account &amp; Billing Details <i class="fa fa-caret-down"></i></a></h4>
+                    </div>
+                    {% if request.user.is_authenticated and not order.method %}
+                    <div class="panel-collapse collapse in" id="collapse-payment-address" aria-expanded="true">
+                    {% else %}
+                    <div class="panel-collapse collapse" id="collapse-payment-address" aria-expanded="false"  style="height: 0px;">
+                    {% endif %}
+                        <div class="panel-body">
+                            <div class="row">
+                                {% if request.user.is_authenticated %}
+                                <div class="col-sm-6">
+                                    <h2>Customer: </h2>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <img class="checkout_profile" src="{{request.user.customer.profile_pic.url}}" alt="">
+                                        </div>
+                                        <div class="col-sm-6" style="margin-top:17px ;">
+                                            <p>Name : <a href="">{{request.user.first_name}} {{request.user.last_name}}</a></p>
+                                            <p>Email : <a href="">{{request.user.email}}</a></p>
+                                            <p>Telephone : <a href="">{{request.user.customer.phone}}</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" >
+                                    <h2>Billing: </h2>
+                                    <p>Address: {{shipping.address}}</p>
+                                    <p>Area: {{shipping.state}}</p>
+                                    <p>City: {{shipping.city}}</p>
+                                    <p>Want to edit shipping address? <a href="{% url 'noksha:account_profile' shipping.customer.user.id %}#billing_details">Click here.</a> </p>
+                                    <a type="button" href="#collapse-payment-method" data-toggle="collapse" data-parent="#accordion" class="accordion-toggle" aria-expanded="true" id="button-account"  class="btn btn-primary">Continue</a>
+                                </div>
+                                {% else %}
+                                <form id="account" method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                    <div class="col-sm-6">
+                                        <legend>Your Personal Details</legend>
+                                        <div class="form-group required">
+                                            <label class="control-label" for="input-payment-firstname">Full Name</label>
+                                            <input type="text" name="reg_name" value="" placeholder="Full Name" id="input-payment-firstname" class="form-control" required>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="control-label" for="input-payment-email">E-Mail</label>
+                                            <input type="text" name="reg_email" value="" placeholder="E-Mail" id="input-payment-email" class="form-control" required >
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="control-label" for="input-payment-telephone">Telephone</label>
+                                            <input type="text" name="reg_phone" value="" placeholder="Telephone" id="input-payment-telephone" class="form-control" required >
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <legend>Your Address</legend>
+                                        <div class="form-group required">
+                                            <label class="control-label" for="input-payment-address-1">Address </label>
+                                            <input type="text" name="address" placeholder="Address ..." id="input-payment-address-1" class="form-control" required >
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="control-label" for="input-payment-postcode">Area</label>
+                                            <input type="text" name="area" value="" placeholder="Area ...." id="input-payment-postcode" class="form-control" required >
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="control-label" for="input-payment-city">City</label><br>
+                                            <input type="radio" name="city"  value="Dhaka" style="margin-right:5px;" checked>Dhaka</input> <br>
+                                            <input type="radio" name="city" id="cityValue" style="margin-right:5px;" value="other">Other</input>  <br>
+                                            <input type="text"  placeholder="Enter City ...." id="input-payment-city" class="form-control">
+
+                                        </div>
+                                        <input type="submit" value="Login"   class="btn btn-primary">
+                                    </div>
+                                </div>
+                                  
+                                </form>
+                                {% endif %}
+                              </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {% if shipping %}
+                        <h4 class="panel-title">
+                            <a href="#collapse-payment-method" data-toggle="collapse" data-parent="#accordion" class="accordion-toggle" aria-expanded="true">Step 3: Payment Method <i class="fa fa-caret-down"></i></a>
+                            
+                        </h4>
+                        {% else%}
+                        <h4 class="panel-title">Step 3: Payment Method</h4>
+                        {% endif %}
+                    </div>
+                    <div class="panel-collapse collapse" id="collapse-payment-method">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h4>payment gateway: </h4>
+                                            <div class="radio">
+                                                {% if shipping.city == 'Dhaka' %}
+                                                <label style="margin-bottom: 10px;">         
+                                                    <input class="checkbox_gateway" type="radio" name="method" value="cod" checked>
+                                                    <img class="gateway_img" src="{% static '/images/cod.jpg' %}" alt="">
+                                                </label>
+                                                {% else %}
+                                                <p>Cash on delivery services are open for <b>Inside Dhaka</b> only.</p>
+                                                {% endif %} 
+                                                <label  style="margin-bottom: 10px;">         
+                                                    <input class="checkbox_gateway" type="radio" name="method" value="bkash" >
+                                                    <img class="gateway_img" src="{% static '/images/bkash.png' %}" alt="">
+                                                </label>
+                                                <label>         
+                                                    <input class="checkbox_gateway" type="radio" name="method" value="nagad" >
+                                                    <img class="gateway_img" src="{% static '/images/nagad.png' %}" alt="">
+                                                </label>
+                                                <label>         
+                                                    <input class="checkbox_gateway" type="radio" name="method" value="rocket" >
+                                                    <img class="gateway_img" src="{% static '/images/rocket.png' %}" alt="">
+                                                </label>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6" id="bkash_info" >
+                                            <h4>Payment steps: </h4>
+                                            <p>Step 1: <b>*247#</b></p>
+                                            <p>Step 2: Select <b>Send Money</b></p>
+                                            <p>Step 3: Enter Number <b>01833371699</b> or <br><a style="margin-left: 45px;" onclick="imagePopUP(this)" value="/static/images/bkash_QR.jpeg"> <b><i class="fa fa-qrcode" aria-hidden="true"></i> Scan QR code</b> </a></p>
+                                            <p>Step 4: Enter amount <b>{{bkash_total|floatformat:0}}&#2547;</b></p>
+                                            <p>Step 5: Enter Reference <b>{{order.id}}</b></p>
+                                            <p>Step 6: Enter PIN <b>*****</b></p>
+                                        </div>
+                                        <div class="col-sm-6" id="nagad_info" >
+                                            <h4>Payment steps: </h4>
+                                            <p>Step 1: <b>*167#</b></p>
+                                            <p>Step 2: Select <b>Send Money</b></p>
+                                            <p>Step 3: Enter Number <b>01833371699</b> </p>
+                                            <p>Step 4: Enter amount <b>{{nagad_total|floatformat:0}}&#2547;</b></p>
+                                            <p>Step 5: Enter Reference <b>{{order.id}}</b></p>
+                                            <p>Step 6: Enter PIN <b>****</b></p>
+                                        </div>
+                                        <div class="col-sm-6" id="rocket_info" >
+                                            <h4>Payment steps: </h4>
+                                            <p>Step 1: <b>*322#</b></p>
+                                            <p>Step 2: Select <b>Send Money</b></p>
+                                            <p>Step 3: Enter Number <b>018333716991</b> or <br><a style="margin-left: 45px;" onclick="imagePopUP(this)" value="/static/images/rocket_qr.jpg"> <b><i class="fa fa-qrcode" aria-hidden="true"></i> Scan QR code</b> </a></p>
+                                            <p>Step 4: Enter amount <b>{{rocket_total|floatformat:0}}&#2547;</b></p>
+                                            <p>Step 5: Enter Reference <b>{{order.id}}</b></p>
+                                            <p>Step 6: Enter PIN <b>****</b></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" >
+                                    <h4>Transaction Details: </h4>
+                                    <p>Payment gateway: {% if shipping.city == 'Dhaka' %}<input id="payment_gateway" value="cod" disabled>{% else %}<input id="payment_gateway" value="" disabled>{% endif %}</p>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <div class="row" id="transaction_details">
+                                            <input id="method_value" type="hidden" name="method" value="cod">
+                                        </div>
+                                        <input type="submit" value="Confirm" id="payment_confirm" class="btn btn-primary">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    {% if order.method %}
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a href="#collapse-checkout-confirm" data-toggle="collapse" data-parent="#accordion" class="accordion-toggle" aria-expanded="true">Step 4: Confirm Order <i class="fa fa-caret-down"></i></a>
+                        </h4>
+                    </div>
+                    {% else %}
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Step 4: Confirm Order</h4>
+                    </div>
+                    {% endif %}
+                    {% if order.method %}
+                    <div class="panel-collapse collapse in" id="collapse-checkout-confirm" aria-expanded="true">
+                    {% else %}
+                    <div class="panel-collapse collapse" id="collapse-checkout-confirm" aria-expanded="false" style="height: 0px;">
+                    {% endif %}
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td class="text-center">Image</td>
+                                            <td class="text-left">Product Name</td>
+                                            <td class="text-left">Quantity</td>
+                                            <td class="text-left">Size</td>
+                                            <td class="text-left">Color</td>
+                                            <td class="text-right">Unit Price</td>
+                                            <td class="text-right">Total</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td class="text-center">
+                                                 <a class="img-link" href="{% url 'noksha:product_view' item.product.id %}">
+                                                    {% for i in item.image %}
+                                                    <img src="{{i.n_img.url}}" alt="{{item.product.name}}" title="{{item.product.name}}" class="img-thumbnail">
+                                                    {% endfor %}
+                                                </a> 
+                                            </td>
+                                            <td class="text-left">
+                                                <a href="{% url 'noksha:product_view' item.product.id %}">{{item.product.name}}</a>                                                 
+                                            </td>
+                                            <td class="text-center">
+                                               <p>{{item.quantity}}</p>
+                                            </td>
+                                            <td class="text-center">
+                                               <p>{{item.size}}</p>
+                                            </td>
+                                            <td class="text-center">
+                                                <p>{{item.color}}</p>
+                                            </td>
+                                            <td class="text-right">{{item.product.price|floatformat:2}}&#2547;</td>
+                                            <td class="text-right">{{item.get_total|floatformat:2}}&#2547;</td>
+                                        </tr>
+                                        {% endfor %}
+                                                            
+                                    </tbody>
+                                    
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-right"><strong>Sub-Total:</strong></td>
+                                                <td class="text-right">{{cartTotal|floatformat:2}}&#2547;</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right"><strong>Charges{% if shipping.city == "Dhaka" %}<span>(Inside Dhaka)</span> {% else %} <span>(Outside Dhaka)</span>{% endif %} :</strong></td>
+                                                <td class="text-right">+ {{delivery_charge|floatformat:2}}&#2547;</td>
+                                            </tr>
+                                            {% if order.amount > 0 %}
+                                            <tr>
+                                                <td class="text-right"><strong>Cupon<span>( {{order.cupon_code}} )</span> :</strong></td>
+                                                <td class="text-right">- {{order.cupon_amount|floatformat:2}}&#2547;</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if percentageAmount > 0 %}
+                                            <tr>
+                                                <td class="text-right"><strong>Member<span>( 5% discount )</span> :</strong></td>
+                                                <td class="text-right">- {{percentageAmount|floatformat:2}}&#2547;</td>
+                                            </tr>
+                                            {% endif %}
+                                            <tr>
+                                                <td class="text-right"><strong>Total<span>(With Charges)</span> :</strong></td>
+                                                <td class="text-right">{{order.total|floatformat:2}}&#2547;</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right"><strong>Paid :</strong></td>
+                                                <td class="text-right">{{order.advance|floatformat:2}}&#2547;</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right"><strong>Due :</strong></td>
+                                                <td class="text-right">{{order.due|floatformat:2}}&#2547;</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="buttons clearfix">
+                                <div class="pull-left">
+                                    <a href="{% url 'noksha:cart' %}" class="btn btn-default">Edit Cart</a>
+                                </div>
+                                <div class="pull-right">
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_confirm" >
+                                        <input type="submit" value="Confirm" class="btn btn-primary">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

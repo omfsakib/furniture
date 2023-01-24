@@ -1,0 +1,183 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+<style>
+.blog-description p{
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+.close-btn {
+    position: absolute;
+    cursor: pointer;
+    right: 5px;
+    top: 5px;
+    font-size: 26px;
+    width: 26px;
+    background-color: black;
+    color: white;
+    border-radius: 50%;
+    padding: 4px;
+}
+    .action_button{
+        display: flex;
+        justify-content: center;
+    }
+    .action_button .btn:last-child{
+        margin-left: 10px;
+    }
+    .action_button .btn:first-child{
+        margin-right: 10px;
+    }
+</style>
+<script>
+    function toggleBlogPopup(className) {
+        $(className).toggle()
+    }
+    function toggleCreateBlogPopup() {
+        $('.create-blog').toggle()
+    }
+    function toggleDeleteBlogPopup(id) {
+        $('.delete').attr('value',id)
+        $('.delete-blog').toggle()
+    }
+</script>
+<div class="create-blog" style="overflow: auto;position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);max-width: 88%;max-height: 88%;   min-width: 350px;background-color: #ddddddf5;border: 1px solid #eee;box-sizing: border-box;padding: 10px;
+z-index: 999;
+display: none;    
+border-radius: 20px;">
+    <div onclick="toggleCreateBlogPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="blogName">Name :</label>
+            <input type="text" name="name" id="blogName" placeholder="Blog name...." class="form-control">
+            <label for="blogPlace">Place :</label>
+            <input type="text" name="place" id="blogPlace" placeholder="Blog place..." class="form-control"> <br>
+            <label for="blogImage">Image :</label>
+            <input type="file" name="image" id="blogImage" class="form-control"> <br>
+            <label for="blogVideo">Video :</label>
+            <input type="file" name="video" id="blogVideo" class="form-control"> <br>
+            <label for="blogDescription">Description :</label>
+            <textarea rows="6" cols="100" type="text" name="description" id="blogDescription" placeholder="Blog description....."  class="form-control"></textarea>
+            <br>
+            <p class="text-center"><button type="submit" class="btn btn-success">Create</button></p>
+        </form>
+    </div>
+</div>
+<div class="delete-blog" style="overflow: auto;position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);max-width: 88%;max-height: 88%;   min-width: 350px;background-color: #ddddddf5;border: 1px solid #eee;box-sizing: border-box;padding: 10px;
+z-index: 999;
+display: none;    
+border-radius: 20px;">
+    <div onclick="toggleDeleteBlogPopup('none')" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="heading text-center">
+                <h3>Delete</h3>
+                <h4>Are you sure to delete this blog?</h4>
+            </div><hr>
+            <div class="action_button" >
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="blog_delete" value="" class="btn btn-danger delete">Yes</button>
+                </form>
+                <button onclick="toggleDeleteBlogPopup('none')" class="btn btn-info">No</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="main">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="6"><input type="text" class="form-control" placeholder="Search blogs.... "></th>
+                                <th><button type="button" class="btn btn-info" onclick="toggleCreateBlogPopup()"><i class="fa fa-plus" aria-hidden="true"></i></button></th>
+                            </tr>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th>Video</th>
+                            <th>Place</th>
+                            <th>Date added</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            {% for blog in blogs %}
+                            <tr>
+                                <td>{{blog.name}}</td>
+                                <td><img style="max-width:150px ;" src="{{blog.img.url}}" alt="{{blog.name}}"></td>
+                                <td>
+                                    {% if blog.video %}
+                                    <video style = "max-width:150px;" controls>
+                                        <source src="{{ blog.video.url }}" type="video/mp4">
+                                    </video>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ blog.place }}
+                                </td>
+                                <td>{{ blog.date_added|date:"M d, Y" }}</td>
+                                <td class="blog-description">
+                                    <p>
+                                        {{blog.description}}
+                                    </p>
+                                </td>
+                                <td>
+                                    <button class="btn btn-info" onclick="toggleBlogPopup('.view-blog'+'{{blog.id}}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    <button class="btn btn-danger" onclick="toggleDeleteBlogPopup('{{blog.id}}')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </td>
+                                <div class="view-blog{{blog.id}}" style="overflow: auto;position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);max-width: 88%;max-height: 88%;   min-width: 350px;background-color: #ddddddf5;border: 1px solid #eee;box-sizing: border-box;padding: 10px;
+                                z-index: 999;
+                                display: none;    
+                                border-radius: 20px;">
+                                    <div onclick="toggleBlogPopup('.view-blog'+'{{blog.id}}')" class="close-btn">
+                                        ×
+                                    </div>
+                                    <div class="content">
+                                        <form method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="blogID" value="{{blog.id}}">
+                                            <label for="blogName">Name :</label>
+                                            <input type="text" name="blogName" id="blogName" value="{{blog.name}}" class="form-control">
+                                            <label for="blogPlace">Place :</label>
+                                            <input type="text" name="blogPlace" id="blogPlace" value="{{blog.place}}" class="form-control"> <br>
+                                            <label for="blogImage">Image :</label>
+                                            <img src="{{blog.img.url}}" alt="{{blog.name}}">
+                                            <input type="file" name="blogImage" id="blogImage" class="form-control"> <br>
+                                            <label for="blogVideo">Video :</label>
+                                            {% if blog.video %}
+                                            <video width="320" height="240" controls>
+                                                <source src="{{blog.video.url}}" type="video/mp4">
+                                              Your browser does not support the video tag.
+                                            </video>
+                                            {% endif %}
+                                            <input type="file" name="blogVideo" id="blogVideo" class="form-control"> <br>
+                                            <label for="blogDescription">Description :</label>
+                                            <textarea rows="6" cols="100" type="text" name="blogDescription" id="blogDescription"  class="form-control">{{blog.description}}</textarea>
+                                            <br>
+                                            <p class="text-center"><button type="submit" class="btn btn-success">Update</button></p>
+                                        </form>
+                                    </div>
+                                </div>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

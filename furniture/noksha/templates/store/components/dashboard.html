@@ -1,0 +1,214 @@
+<script>
+    function filterClick(status){
+        $.each($("#table tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+                else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+</script>
+<div class="row">
+    <div class="col-sm-12"  style="overflow: auto;">
+        <div class="user_dashboard">
+            <div class="heading text-center">
+                <h2>Dashboard</h2>
+            </div> <br> <hr> <br>
+            <div class="count_table">
+                <style>
+                    .row {
+                    display: -ms-flexbox;
+                    display: flex;
+                    -ms-flex-wrap: wrap;
+                    flex-wrap: wrap;
+                    margin-right: -15px;
+                    margin-left: -15px;
+                }
+                .col {
+                    -ms-flex-preferred-size: 0;
+                    flex-basis: 0;
+                    -ms-flex-positive: 1;
+                    flex-grow: 1;
+                    max-width: 100%;
+                    padding-right: 15px;
+                    padding-left: 15px;
+                }
+                .card {
+                    position: relative;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -ms-flex-direction: column;
+                    flex-direction: column;
+                    min-width: 0;
+                    word-wrap: break-word;
+                    background-color: #fff;
+                    background-clip: border-box;
+                    border: 1px solid rgba(0,0,0,.125);
+                    border-radius: 0.25rem;
+                    margin-bottom: 10px;
+                }
+                    .card-header {
+                    padding: 0.75rem 1.25rem;
+                    margin-bottom: 0;
+                    background-color: rgba(0,0,0,.03);
+                    border-bottom: 1px solid rgba(0,0,0,.125);
+                }
+                .card-body {
+                    -ms-flex: 1 1 auto;
+                    flex: 1 1 auto;
+                    min-height: 1px;
+                    padding: 1.25rem;
+                }
+                .text-white h5{
+                    font-size: 12px;
+                }
+                .text-white h5,.text-white h3{
+                    color: black !important;
+                }
+                </style>
+                <div class="row">
+                    <div class="col">
+                        <div class="col-md">
+                            <div class="card text-center text-white md-3" id="total-orders">
+                                <a onclick="filterClick('all')" style="color: white !important; text-decoration:none;">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Total Orders</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="card-title">{{status.total_orders}}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="col-md">
+                            <div class="card text-center text-white md-3" id="orders-delivered">
+                                <a onclick="filterClick('delivered')" style="color: white !important; text-decoration:none;">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Delivered</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="card-title">{{status.delivered}}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="col-md">
+                            <div class="card text-center text-white md-3" id="orders-transit">
+                                <a onclick="filterClick('In Transit')" style="color: white !important; text-decoration:none;">
+                                    <div class="card-header">
+                                        <h5 class="card-title">In Transit</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="card-title">{{status.transit}}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="col-md">
+                            <div class="card text-center text-white md-3" id="orders-confirmed">
+                                <a onclick="filterClick('Confirmed')" style="color: white !important; text-decoration:none;">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Confirmed</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="card-title">{{status.confirmed}}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="col-md">
+                            <div class="card text-center text-white md-3" id="orders-pending">
+                                <a onclick="filterClick('Pending')" style="color: white !important; text-decoration:none;">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Pending</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="card-title">{{status.pending}}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><br> <hr> <br>
+            <div class="user_orders">
+                
+<div class="row">
+    <div class="col-sm-12" style="
+    overflow: hidden;
+">
+        
+        <div class="table-responsive">
+            <table class="table table-bordered" id="table">
+                <thead>
+                    <tr> 
+                        <td class="text-center">Memo No.</td>
+                        <td class="text-left">Status</td>
+                        <td class="text-left">Method</td>
+                        <td class="text-left">Date</td>
+                        <td class="text-left">Total</td>
+                        <td class="text-left">Paid</td>
+                        <td class="text-left">Due</td>
+                        <td class="text-center">View</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in filterOrders %}
+                    <tr>
+                        <td class="text-center">{{order.id}}</td>
+                        <td class="text-left">
+                            {% if order.status == 'Customer Confirmed' %}
+                            Pending
+                            {% elif order.status == 'Admin Confirmed' %}
+                            Confirmed
+                            {% elif order.status == 'In-Transit' %}
+                            In Transit
+                            {% elif order.status == 'Delivered' %}
+                            Delivered
+                            {% else %}
+                            Cancel
+                            {% endif %}
+                        </td>
+                        <td class="text-left">
+                            {% if order.method == 'cod' %}
+                            Cash on delivery
+                            {% else %}
+                            {{order.method}}
+                            {% endif %}
+                        </td>
+                        <td class="text-left">{{order.date_created|date:'M d, Y'}}</td>
+                        <td class="text-left">{{order.total|floatformat:0}}&#2547;</td>
+                        <td class="text-left">{{order.advance|floatformat:0}}&#2547;</td>
+                        <td class="text-left">{{order.due|floatformat:0}}&#2547;</td>
+                        <td class="text-center">
+                            <a href="{% url 'noksha:order_view' order.id %}" style="
+                            background: #4cb4c7;
+                            color: #fff;
+                            padding: 2px 4px;
+                            border: 1px solid #ddd;
+                            border-radius: 7px;">
+                                <i class="fa fa-eye" aria-hidden="true" style="font-size: 15px;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}     
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+</div>

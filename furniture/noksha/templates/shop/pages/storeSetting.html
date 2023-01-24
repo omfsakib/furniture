@@ -1,0 +1,834 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+<style>
+    .upload-collection-section,
+    .upload-banner-section,
+    .banner-edit-section,
+    .delete-home-banner,
+    .delete-collection,
+    .delete-shopnow,
+    .delete-latest,
+    .collection-edit-section,
+    .shopnow-edit-section,
+    .upload-shopnow-section,
+    .add-latest,
+    .remove-navigation,
+    .remove-mostviewed,
+    .add-navigation,
+    .add-mostviwed{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 88%;
+        max-height: 88%;    
+        min-width: 350px;
+        background-color: #ddddddf5;
+        border: 1px solid #eee;
+        box-sizing: border-box;
+        padding: 10px;
+        z-index: 100;
+        display: none;    
+        border-radius: 20px;
+        /*to hide popup initially*/
+    }
+    .close-btn {
+        position: absolute;
+        cursor: pointer;
+        right: 5px;
+        top: 5px;
+        font-size: 26px;
+        width: 26px;
+        background-color: black;
+        color: white;
+        border-radius: 50%;
+        padding: 4px;
+    }
+    .action_button{
+        display: flex;
+        justify-content: center;
+    }
+    .action_button .btn:last-child{
+        margin-left: 10px;
+    }
+    .action_button .btn:first-child{
+        margin-right: 10px;
+    }
+</style>
+<script>
+    function toggleUploadHomeBannerPopup() {
+        $(".upload-banner-section").toggle();
+    }
+    function toggleDeleteHomeBannerPopup(id) {
+        $('.delete-banner').attr('value',id)
+        $(".delete-home-banner").toggle();
+    }
+    function toggleDeleteShopNowPopup(id) {
+        $('.delete-shopnow-btn').attr('value',id)
+        $(".delete-shopnow").toggle();
+    }
+    function toggleDeleteCollectionPopup(id) {
+        $('.delete-collection-btn').attr('value',id)
+        $(".delete-collection").toggle();
+    }
+    function toggleUploadCollectionPopup() {
+        $(".upload-collection-section").toggle();
+    }
+    function toggleUploadShopNowPopup() {
+        $(".upload-shopnow-section").toggle();
+    }
+    function toggleDeleteLatestPopup(id) {
+        $('.delete-latest-btn').attr('value',id)
+        $(".delete-latest").toggle();
+    }
+    
+    function toggleAddLatestPopup() {
+        $(".add-latest").toggle();
+    }
+    function toggleAddNavigationPopup() {
+        $(".add-navigation").toggle();
+    }
+    function toggleAddMostViewedPopup() {
+        $(".add-mostviwed").toggle();
+    }
+    
+    function toggleRemoveNavigationPopup(id) {
+        $('.remove-navigation-btn').attr('value',id)
+        $(".remove-navigation").toggle();
+    }
+    function toggleRemoveMostViewedPopup(id) {
+        $('.remove-mostview-btn').attr('value',id)
+        $(".remove-mostviewed").toggle();
+    }
+    
+    function toggleEditHomeBannerPopup(id){
+        $(".banner-edit-section").toggle();
+        if(id){
+            getBanner(id)
+        }
+        async function getBanner(id){
+            let response = await fetch('/shop/store/banner/'+id,{
+                method: 'get',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let data = await response.json()
+            $('.banner-image img').attr('src',await data['banner']['banner_img'])
+            $('.banner_id').attr('value',await data['banner']['id'])
+            $('.title-heading').attr('value',await data['banner']['title_heading'])
+            $('.estimated_category').html(await data['banner']['estimated_category'])
+            $('.estimated_category_input').val(await data['banner']['category_id'])
+        }
+    }
+    function toggleEditCollectionPopup(id){
+        $(".collection-edit-section").toggle();
+        if(id){
+            getCollection(id)
+        }
+        async function getCollection(id){
+            let response = await fetch('/shop/store/collection/'+id,{
+                method: 'get',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let data = await response.json()
+            $('.collection-image img').attr('src',await data['collection']['img'])
+            $('.collection_id').attr('value',await data['collection']['id'])
+            $('.collection_estimated_category').html(await data['collection']['estimated_category'])
+            $('.collection_estimated_category_input').val(await data['collection']['category_id'])
+        }
+    }
+    function toggleEditShopNowPopup(id){
+        $(".shopnow-edit-section").toggle();
+        if(id){
+            getShopNow(id)
+        }
+        async function getShopNow(id){
+            let response = await fetch('/shop/store/shopnow/'+id,{
+                method: 'get',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let data = await response.json()
+            $('.shopnow-image img').attr('src',await data['shopnow']['img'])
+            $('.shopnow_id').attr('value',await data['shopnow']['id'])
+            $('.shopnow_estimated_category').html(await data['shopnow']['estimated_category'])
+            $('.shopnow_estimated_category_input').val(await data['shopnow']['category_id'])
+        }
+    }
+    
+    function filterClick(status){
+        $.each($("#table tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+            else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+    function ltsearch(status){
+        $.each($("#lttable tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+            else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+    function navigationSearch(status){
+        $.each($("#navigationtable tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+            else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+    function mostViewedSearch(status){
+        $.each($("#mostviewdtable tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+            else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+    
+</script>
+<div class="delete-home-banner" style="overflow: auto;">
+    <div onclick="toggleDeleteHomeBannerPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to delete this banner?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="home_banner_delete" value="" class="btn btn-danger delete-banner">Yes</button>
+            </form>
+            <button onclick="toggleDeleteHomeBannerPopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="remove-navigation" style="overflow: auto;">
+    <div onclick="toggleRemoveNavigationPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to remove this category from navigation?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="nvcategory" name="category_for_indivitual">
+                <button type="submit" name="category_remove" value="" class="btn btn-danger remove-navigation-btn">Yes</button>
+            </form>
+            <button onclick="toggleRemoveNavigationPopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="remove-mostviewed" style="overflow: auto;">
+    <div onclick="toggleRemoveMostViewedPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to remove this category from most viewed section?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="pvfurniture" name="category_for_indivitual">
+                <button type="submit" name="category_remove" value="" class="btn btn-danger remove-mostview-btn">Yes</button>
+            </form>
+            <button onclick="toggleRemoveMostViewedPopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="delete-collection" style="overflow: auto;">
+    <div onclick="toggleDeleteCollectionPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to delete this collection?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="collection_delete" value="" class="btn btn-danger delete-collection-btn">Yes</button>
+            </form>
+            <button onclick="toggleDeleteCollectionPopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="delete-shopnow" style="overflow: auto;">
+    <div onclick="toggleDeleteShopNowPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to delete this office furniture category?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="shopnow_delete" value="" class="btn btn-danger delete-shopnow-btn">Yes</button>
+            </form>
+            <button onclick="toggleDeleteShopNowPopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="delete-latest" style="overflow: auto;">
+    <div onclick="toggleDeleteLatestPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to remove this product from Latest Arrivals?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="latest_delete" value="" class="btn btn-danger delete-latest-btn">Yes</button>
+            </form>
+            <button onclick="toggleDeleteLatestPopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="banner-edit-section" style="overflow: auto;">
+    <div onclick="toggleEditHomeBannerPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="heading">
+                <h3>Home Banner Setting</h3>
+            </div>
+            <div class="banner-image">
+                <img src=""> <br> <br>
+                <h4>Change image :</h4>
+                <input type="file" name="update_banner_img" class="form-control">
+            </div>
+            <div class="context">
+                <input type="hidden" name="banner_id" class="banner_id">
+                <h4>Heading :</h4>
+                <input type="text" value="" name="update_banner_title" class="form-control title-heading">
+
+                <h4>Category : <span class="estimated_category"></span></h4>
+                <select name="update_estimated_category" class="form-control estimated_category_input">
+                    {% for i in categorys %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                </select>
+
+                <br>
+                <div class="action_btn" style="display: flex; justify-content:center">
+                    <button type="submit" class="btn btn-info">Update</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div class="collection-edit-section" style="overflow: auto;">
+    <div onclick="toggleEditCollectionPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="heading">
+                <h3>Collection Setting</h3>
+            </div>
+            <div class="collection-image">
+                <img src=""> <br> <br>
+                <h4>Change image :</h4>
+                <input type="file" name="update_collection_img" class="form-control">
+            </div>
+            <div class="context">
+                <input type="hidden" name="collection_id" class="collection_id">
+                <h4>Category : <span class="collection_estimated_category"></span></h4>
+                <select name="update_collection_estimated_category" class="form-control collection_estimated_category_input">
+                    {% for i in categorys %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                </select>
+
+                <br>
+                <div class="action_btn" style="display: flex; justify-content:center">
+                    <button type="submit" class="btn btn-info">Update</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div class="shopnow-edit-section" style="overflow: auto;">
+    <div onclick="toggleEditShopNowPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="heading">
+                <h3>Office Furniture Category Setting</h3>
+            </div>
+            <div class="shopnow-image">
+                <img src=""> <br> <br>
+                <h4>Change image :</h4>
+                <input type="file" name="update_shopnow_img" class="form-control">
+            </div>
+            <div class="context">
+                <input type="hidden" name="shopnow_id" class="shopnow_id">
+                <h4>Category : <span class="shopnow_estimated_category"></span></h4>
+                <select name="update_shopnow_estimated_category" class="form-control shopnow_estimated_category_input">
+                    {% for i in subcategorys %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                </select>
+
+                <br>
+                <div class="action_btn" style="display: flex; justify-content:center">
+                    <button type="submit" class="btn btn-info">Update</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div class="upload-banner-section" style="overflow: auto;">
+    <div onclick="toggleUploadHomeBannerPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="slider-upload">
+            <div class="heading text-center">
+                <h4>Upload new banner</h4>
+            </div>
+             <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>Upload image :</p>
+                <input type="file" name="banner_img" class="form-control" required>
+                <p>Heading :</p>
+                <input type="text" name="title_heading" class="form-control" required>
+                <p>Category:</p>
+                <select name="estimated_category" class="form-control" required>
+                    {% for i in categorys %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                </select>
+                
+                <br>
+                <div class="action_btn" style="display: flex; justify-content:center">
+                    <button type="submit" class="btn btn-info">Upload</button>
+                </div>
+             </form>
+        </div>
+    </div>
+</div>
+<div class="upload-collection-section" style="overflow: auto;">
+    <div onclick="toggleUploadCollectionPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        {% if total_collection_items >= 6 %}
+        <div class="slider-upload-error">
+            <p><strong>Note :</strong> You can only set 6 categorys in this section. <br>
+            To upload a new categorys please make sure you have less than 6 categorys uploaded. <br>
+            Also you can edit the existing categorys items.</p>
+        </div>
+        {% else %}
+        <div class="slider-upload">
+            <div class="heading text-center">
+                <h4>Upload new collection</h4>
+            </div>
+             <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>Upload image :</p>
+                <input type="file" name="img" class="form-control" required>
+                <p>Category:</p>
+                <select name="estimated_category_collection" class="form-control" required>
+                    {% for i in categorys %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                </select>
+                
+                <br>
+                <div class="action_btn" style="display: flex; justify-content:center">
+                    <button type="submit" class="btn btn-info">Upload</button>
+                </div>
+             </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="upload-shopnow-section" style="overflow: auto;">
+    <div onclick="toggleUploadShopNowPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        {% if total_shopnow_items >= 6 %}
+        <div class="slider-upload-error">
+            <p><strong>Note :</strong> You can only set 6 categorys in this section. <br>
+            To upload a new categorys please make sure you have less than 6 categorys uploaded. <br>
+            Also you can edit the existing categorys items.</p>
+        </div>
+        {% else %}
+        <div class="slider-upload">
+            <div class="heading text-center">
+                <h4>Upload new Office Furniture category</h4>
+            </div>
+             <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>Upload image :</p>
+                <input type="file" name="img" class="form-control" required>
+                <p>Category:</p>
+                <select name="estimated_category_shop" class="form-control" required>
+                    {% for i in subcategorys %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                </select>
+                
+                <br>
+                <div class="action_btn" style="display: flex; justify-content:center">
+                    <button type="submit" class="btn btn-info">Upload</button>
+                </div>
+             </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="add-latest" style="overflow: auto;">
+    <div onclick="toggleAddLatestPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <h4 class="text-center">Add product to latest arrivals</h4>
+        <div class="table-responsive">
+            <form method="POST">
+                {% csrf_token %}
+                <table class="table table-bordered" id="lttable">
+                    <thead>
+                        <tr>
+                            <th colspan="3"><input type="text" onkeyup="ltsearch(this.value)" class="form-control" placeholder="Search products...."></th>
+                            <th><button type="submit" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Add</button></th>
+                        </tr>
+                        <tr>
+                            <th>Select</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td><input type="checkbox" name="products_id_list" value="{{product.id}}"></td>
+                            <td><img src="{{product.image_1}}" style="max-width: 70px;"></td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.product_code}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="add-navigation" style="overflow: auto;">
+    <div onclick="toggleAddNavigationPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <h4 class="text-center">Add categorys to navigation bar.</h4>
+        <div class="table-responsive">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="nvcategory" name="add_category_for_indivitual">
+                <table class="table table-bordered" id="navigationtable">
+                    <thead>
+                        <tr>
+                            <th colspan="2"><input type="text" onkeyup="navigationSearch(this.value)" class="form-control" placeholder="Search categorys...."></th>
+                            <th><button type="submit" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Add</button></th>
+                        </tr>
+                        <tr>
+                            <th>Select</th>
+                            <th colspan="2" class="text-center">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categorys %}
+                        {% if category in nvCategorys.categorys.all %}
+                        {{pass}}
+                        {% else %}
+                        <tr>
+                            <td style="width: 20px;"><input type="checkbox" name="category_id_list" value="{{category.id}}"></td>
+                            <td colspan="2" class="text-center">{{category.name}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="add-mostviwed" style="overflow: auto;">
+    <div onclick="toggleAddMostViewedPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <h4 class="text-center">Add categorys to Popular Furniture.</h4>
+        <div class="table-responsive">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="pvfurniture" name="add_category_for_indivitual">
+                <table class="table table-bordered" id="mostviewdtable">
+                    <thead>
+                        <tr>
+                            <th colspan="2"><input type="text" onkeyup="mostViewedSearch(this.value)" class="form-control" placeholder="Search categorys...."></th>
+                            <th><button type="submit" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Add</button></th>
+                        </tr>
+                        <tr>
+                            <th>Select</th>
+                            <th colspan="2" class="text-center">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in subcategorys %}
+                        {% if category in mvCategorys.categorys.all %}
+                        {{pass}}
+                        {% else %}
+                        <tr>
+                            <td style="width: 20px;"><input type="checkbox" name="category_id_list" value="{{category.id}}"></td>
+                            <td colspan="2" class="text-center">{{category.name}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="main">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="heading text-center">
+                    <h3 style="text-decoration: underline;">Store Settings</h3><hr><br>
+                </div>
+            </div>
+            <div class="indivitual-category">
+                <h4 class="text-center">Indivitual Category View</h4><hr>
+                <div class="col-sm-6">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" colspan="2">Navigation Categorys</th> 
+                                    <th class="text-center"><button type="button" onclick="toggleAddNavigationPopup()" class="btn btn-sm btn-info"><i class="fa fa-plus" aria-hidden="true"></i> Add</button></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Category Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in nvCategorys.categorys.all %}
+                                <tr>
+                                    <td colspan="2">{{i.name}}</td>
+                                    <td style="width: 40px;"><button type="button" onclick="toggleRemoveNavigationPopup('{{i.id}}')" class="btn btn-sm btn-danger"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" colspan="2">Popular Furniture Categorys</th> 
+                                    <th class="text-center"><button type="button" onclick="toggleAddMostViewedPopup()" class="btn btn-sm btn-info"><i class="fa fa-plus" aria-hidden="true"></i> Add</button></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Category Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in mvCategorys.categorys.all %}
+                                <tr>
+                                    <td colspan="2">{{i.name}}</td>
+                                    <td class="text-right" style="width: 40px;"><button type="button" onclick="toggleRemoveMostViewedPopup('{{i.id}}')" class="btn btn-sm btn-danger"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="home-banner-content">
+                <div class="col-sm-12">
+                    <h4 class="text-center">Home Banner Section</h4><hr>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="3" style="border: none;"></th>
+                                    <th class="text-right" style="border: none;"><button type="button" onclick="toggleUploadHomeBannerPopup()" class="btn btn-info"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button></th>
+                                </tr>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in homebannerItems %}
+                                <tr>
+                                    <td style="width: 165px;"><img src="{{item.banner_img.url}}" alt="{{item.title_heading}}" style="width: 150px;"></td>
+                                    <td>{{item.title_heading}}</td>
+                                    <td>{{item.estimated_category}}</td>
+                                    <td class="text-right">
+                                        <button type="button" onclick="toggleDeleteHomeBannerPopup('{{item.id}}')" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        <button type="button" onclick="toggleEditHomeBannerPopup('{{item.id}}')" class="btn btn-info"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="collection-content">
+                <div class="col-sm-12">
+                    <h4 class="text-center">Space Based Furniture</h4><hr>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" style="border: none;"></th>
+                                    <th class="text-right" style="border: none; display: flex; justify-content: flex-end;"><button type="button" onclick="toggleUploadCollectionPopup()" class="btn btn-info"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button></th>
+                                </tr>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Category</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in collectionItems %}
+                                <tr>
+                                    <td style="width: 165px;"><img src="{{item.img.url}}" alt="{{item.heading}}" style="width: 150px;"></td>
+                            
+                                    <td>{{item.estimated_category}}</td>
+                                    <td class="text-right">
+                                        <button type="button" onclick="toggleDeleteCollectionPopup('{{item.id}}')" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        <button type="button" onclick="toggleEditCollectionPopup('{{item.id}}')" class="btn btn-info"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="shop-now-content">
+                <div class="col-sm-12">
+                    <h4 class="text-center">Office Furniture category section</h4><hr>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" style="border: none;"></th>
+                                    <th class="text-right" style="border: none; display: flex; justify-content: flex-end;"><button type="button" onclick="toggleUploadShopNowPopup()" class="btn btn-info"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button></th>
+                                </tr>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Category</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in shopnowItems %}
+                                <tr>
+                                    <td style="width: 165px;"><img src="{{item.img.url}}" alt="{{item.title}}" style="width: 150px;"></td>
+                                    <td>{{item.estimated_category}}</td>
+                                    <td class="text-right">
+                                        <button type="button" onclick="toggleDeleteShopNowPopup('{{item.id}}')" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        <button type="button" onclick="toggleEditShopNowPopup('{{item.id}}')" class="btn btn-info"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="latest-arrivals-content">
+                <div class="col-sm-12">
+                    <h4 class="text-center">Latest arivals section</h4><hr>
+                    <div class="table-responsive" style="height: 400px;overflow: auto;">
+                        <table class="table table-bordered" id="table">
+                            <thead>
+                                <tr>
+                                    <th colspan="3"><input type="text" onkeyup="filterClick(this.value)" class="form-control" placeholder="Search products...."></th>
+                                    <th class="text-right" style="display: flex; justify-content: flex-end;"><button type="button" class="btn btn-info" onclick="toggleAddLatestPopup()"><i class="fa fa-plus" aria-hidden="true"></i> Add More</button></th>
+                                </tr>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Product Code</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in ltproducts %}
+                                <tr>
+                                    <td style="width: 70px;">
+                                        <img src="{{product.image_1}}" style="max-width: 60px;">
+                                    </td>
+                                    <td>
+                                        {{product.name}}
+                                    </td>
+                                    <td>{{product.product_code}}</td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="toggleDeleteLatestPopup('{{product.id}}')"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

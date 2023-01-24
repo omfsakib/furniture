@@ -1,0 +1,534 @@
+{% include 'shop/main.html' %}
+
+{% block content %}
+<style>
+    .heading_btn{
+        display: flex;
+        justify-content: flex-end;
+    }
+    .heading_btn a{
+        margin-right: 10px;
+        padding: 0px 10px !important;
+    }
+    .img-thumbnail{
+        max-height: 50px;
+    }
+    .color_details,
+    .size_details,
+    .category_details,
+    .delete-product,
+    .add-product-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 88%;
+        height: 88%;
+        background-color: #ddddddf5;
+        border: 1px solid #eee;
+        box-sizing: border-box;
+        padding: 10px;
+        z-index: 100;
+        display: none;    
+        border-radius: 20px;
+        /*to hide popup initially*/
+    }
+    .delete-product{
+        max-width: 500px;
+        max-height: 200px;
+    }
+      
+    .close-btn {
+        position: absolute;
+        cursor: pointer;
+        right: 5px;
+        top: 5px;
+        font-size: 26px;
+        width: 26px;
+        background-color: black;
+        color: white;
+        border-radius: 50%;
+        padding: 4px;
+    }
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+    position: relative;
+    display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    margin-top: 5px;
+    width: auto;
+    min-width: 50px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 9999;    
+    margin-left: 15px;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content input {
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+    .dropdown-content span{
+        margin-right: 3px;
+        font-size: 13px;
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: flex;
+        flex-direction: column;
+    }
+    .product-content::-webkit-scrollbar,
+    .table-responsive::-webkit-scrollbar {
+        display: none;
+    }
+    .text-right span{
+        font-size: 8px;
+    }
+    .action_button{
+        display: flex;
+        justify-content: center;
+    }
+    .action_button .btn:last-child{
+        margin-left: 10px;
+    }
+    .action_button .btn:first-child{
+        margin-right: 10px;
+    }
+    #table_colors>tbody>tr>td,
+    #table_colors>thead>tr>th,
+    #table_sizes>tbody>tr>td,
+    #table_sizes>thead>tr>th,
+    #table_category>tbody>tr>td,
+    #table_category>thead>tr>th {
+        border: 1px solid #eee;
+    }
+    .category_action_btns{
+        display: flex;
+        justify-content: flex-end;
+    }
+    .category_action_btns .btn{
+        font-size: 14px;
+    }
+    .form-control[disabled]{
+        cursor: pointer;    
+        background: none;
+        box-shadow: none;
+        border: none;
+    }
+</style>
+<script>
+    function toggleAddProductPopup() {
+        $(".add-product-content").toggle();
+    }
+    function toggleCategoryPopup() {
+        $(".category_details").toggle();
+    }
+    function toggleDeletePopup(id) {
+        $('.delete').attr('value',id)
+        $(".delete-product").toggle();
+    }
+    function toggleColorPopup(){
+        $(".color_details").toggle();
+    }
+    function toggleSizePopup(){
+        $(".size_details").toggle();
+    }
+    function filterClick(status){
+        $.each($("#table tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+            else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+    function searchCategory(status){
+        $.each($("#table_category tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+            else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+    function searchSizes(status){ 
+        $.each($("#table_sizes tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+            else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+    function searchColors(status){ 
+        $.each($("#table_colors tbody tr"), function() {
+            if(status.toLowerCase() == 'all')
+                $(this).show();  
+            else if($(this).text().toLowerCase().indexOf(status.toLowerCase()) === -1)
+                $(this).hide();
+            else
+                $(this).show();                
+         });
+    }
+</script> 
+<div class="category_details" style="overflow: auto;">
+    <div onclick="toggleCategoryPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="main">
+        <div class="heading text-center">
+            <h3>Categorys</h3>
+        </div>
+        <div class="content">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="table_category">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <input type="text" placeholder="Search categorys..." onkeyup="searchCategory(this.value)" class="form-control">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Category Name</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        <tr>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <th>
+                                    <input type="text" class="form-control" name="category_name" placeholder="Category name....">
+                                </th>
+                                <th>
+                                    <button type="submit" class="btn btn-info"> + Add </button>
+                                </th>
+                            </form>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categorys %}
+                        <tr>    
+                            <td>
+                                <p class="category_name class{{category.id}}">{{category.name}}</p>
+                            </td>
+                            <td class="text-right">
+                                <div class="category_action_btns"> 
+                                    <form method="POST" style="margin-left: 5px;">
+                                        {% csrf_token %}
+                                        <button type="submit" data-toggle="tooltip" name="category_delete" value="{{category.id}}"  class="btn btn-danger" data-original-title="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="color_details" style="overflow: auto;">
+    <div onclick="toggleColorPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="main">
+        <div class="heading text-center">
+            <h3>Colors</h3>
+        </div>
+        <div class="content">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="table_colors">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <input type="text" placeholder="Search colors..." onkeyup="searchColors(this.value)" class="form-control">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th >Color Name</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        <tr>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <th>
+                                    <input type="text" class="form-control" name="color_name" placeholder="Color name....">
+                                </th>
+                                <th>
+                                    <button type="submit" class="btn btn-info"> + Add </button>
+                                </th>
+                            </form>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for color in colors %}
+                        <tr>    
+                            <td class="text-center">
+                                <p>{{color.color}}</p>
+                            </td>
+                            <td class="text-right">
+                                <div class="category_action_btns"> 
+                                    <form method="POST" style="margin-left: 5px;">
+                                        {% csrf_token %}
+                                        <button type="submit" data-toggle="tooltip" name="color_delete" value="{{color.id}}"  class="btn btn-danger" data-original-title="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="size_details" style="overflow: auto;">
+    <div onclick="toggleSizePopup()" class="close-btn">
+        ×
+    </div>
+    <div class="main">
+        <div class="heading text-center">
+            <h3>Sizes</h3>
+        </div>
+        <div class="content">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="table_sizes">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <input type="text" placeholder="Search sizes..." onkeyup="searchSizes(this.value)" class="form-control">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th >Size Name</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        <tr>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <th>
+                                    <input type="text" class="form-control" name="size_name" placeholder="Size name....">
+                                </th>
+                                <th>
+                                    <button type="submit" class="btn btn-info"> + Add </button>
+                                </th>
+                            </form>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for size in sizes %}
+                        <tr>    
+                            <td class="text-center">
+                                <p>{{size.size}}</p>
+                            </td>
+                            <td class="text-right">
+                                <div class="category_action_btns"> 
+                                    <form method="POST" style="margin-left: 5px;">
+                                        {% csrf_token %}
+                                        <button type="submit" data-toggle="tooltip" name="size_delete" value="{{size.id}}"  class="btn btn-danger" data-original-title="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="add-product-content" style="overflow: auto;">
+    <div onclick="toggleAddProductPopup()" class="close-btn">
+        ×
+    </div>
+    <div class="conatiner">
+        <div class="main">
+            <div class="row">
+                <div class="heading text-center">
+                    <h3>Add Products</h3>
+                </div> <br><br>
+                <div class="content">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="col-sm-6">
+                            <legend>Product Details :</legend>
+                            <div class="form-group required">
+                                <label class="control-label" for="id_product_name">Name</label>
+                                <input type="text" name="product_name" placeholder="Product price...." id="id_product_name" class="form-control" required>
+                            </div>
+                            <div class="form-group required">
+                                <label class="control-label" for="id_product_price">Price</label>
+                                <input type="number" name="product_price" placeholder="Product price...." id="id_product_price" class="form-control" required>
+                            </div>
+                            <div class="form-group required">
+                                <label class="control-label" for="id_product_code">Code</label>
+                                <input type="text" name="product_code" placeholder="Product code...." id="id_product_code" class="form-control" required>
+                            </div>
+                            <div class="form-group required">
+                                <label class="control-label" for="id_product_stock">In Stock</label>
+                                <input type="number" name="product_stock" placeholder="Product stock...." id="id_product_stock" class="form-control" required>
+                            </div>
+                            <div class="form-group required" style="display: flex; justify-content: space-between;">
+                                <div class="dropdown">
+                                    <span style="color: red; font-size: 18px; margin-right: 5px;">*</span> <button type="button"  class="btn btn-secondary dropbtn" style="max-width: 105px;">Categorys <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                                    <div class="dropdown-content">
+                                        {% for i in categorys %}
+                                        <div class="category_input">
+                                            <input type="checkbox" value="{{i.id}}" name="product_categorys">{{i.name}}</input>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <span style="color: red; font-size: 18px; margin-right: 5px;">*</span> <button type="button"  class="btn btn-secondary dropbtn" >Sizes <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                                    <div class="dropdown-content">
+                                        {% for i in sizes %}
+                                        <div class="category_input">
+                                            <input type="checkbox" value="{{i.id}}" name="product_sizes">{{i.size}}</input>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <span style="color: red; font-size: 18px; margin-right: 5px;">*</span> <button type="button"  class="btn btn-secondary dropbtn" >Colors <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                                    <div class="dropdown-content">
+                                        {% for i in colors %}
+                                        <div class="category_input">
+                                            <input type="checkbox" value="{{i.id}}" name="product_colors">{{i.color}}</input>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <textarea name="product_description" class="form-control" id="id_product_description" cols="30" rows="10" placeholder="Write details about your product..."></textarea>
+                        </div>
+                        <div class="col-sm-6">
+                            <legend>Add Images :</legend>
+                            <div class="images">
+                                <div class="form-group required">
+                                    <label class="control-label" for="id_product_image">Image</label>
+                                    <input type="file" name="product_image" id="id_product_image" class="form-control">
+                                </div>
+                                <div class="form-group required">
+                                    <label class="control-label" for="id_product_image2">Zoom image</label>
+                                    <input type="file" name="product_image2" id="id_product_image2" class="form-control">
+                                </div><br>
+                                <p><span style="color: red;  margin-right: 5px;">*</span> You can upload more images from product edit section </p>
+                                <input type="submit"  class="btn btn-success">
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="delete-product" style="overflow: auto;">
+    <div onclick="toggleDeletePopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to delete this product?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="product_delete" value="" class="btn btn-danger delete">Yes</button>
+            </form>
+            <button onclick="toggleDeletePopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="main">
+        <div class="row">
+            <div class="heading_btn">
+                <a onclick="toggleCategoryPopup()" class="btn btn-sm btn-primary">Categorys</a>
+                <a onclick="toggleColorPopup()" class="btn btn-sm btn-primary">Colors</a>
+                <a onclick="toggleSizePopup()" class="btn btn-sm btn-primary">Sizes</a>
+            </div> <br> <br>
+            <div class="products">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="table">
+                        <thead>
+                            <tr>
+                                <th colspan="6" class="text-center" style="border: none;">
+                                    <input type="text" class="form-control" placeholder="Search products...." onkeyup="filterClick(this.value)">
+                                </th>
+                                <th class="text-right" style="border: none;">
+                                    <button class="btn btn-info" onclick="toggleAddProductPopup()"> + Add Products</button>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="text-center">Image</td>
+                                <td class="text-left">Product Name</td>
+                                <td class="text-center">Price</td>
+                                <td class="text-center">Stock</td>
+                                <td class="text-left">Product Code</td>
+                                <td class="text-center">Discount</td>
+                                <td class="text-right">Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td class="text-center">
+                                     <a class="img-link" href="{% url 'noksha:shop_product_view' product.id %}">
+                                        <img src="{{product.image_1}}" alt="{{product.name}}" title="{{product.name}}" class="img-thumbnail">
+                                    </a> 
+                                </td>
+                                <td class="text-left">
+                                    <a href="{% url 'noksha:shop_product_view' product.id %}">{{product.name}}</a>                                                 
+                                </td>
+                                <td class="text-center">
+                                   <p>{{product.price|floatformat:0}}&#2547;</p>
+                                </td>
+                                <td class="text-center">
+                                   <p>{{product.stock}}</p>
+                                </td>
+                                <td class="text-left">
+                                    <p>{{product.product_code}}</p>
+                                </td>
+                                <td class="text-center">{{product.discount}}%</td>
+                                <td class="text-right">
+                                    <a href="{% url 'noksha:shop_product_view' product.id %}">
+                                        <button type="button" data-toggle="tooltip"  class="btn btn-success" data-original-title="View">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </a>
+                                    <button type="button" data-toggle="tooltip"  class="btn btn-danger" onclick="toggleDeletePopup('{{product.id}}')" data-original-title="Delete">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                                                
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

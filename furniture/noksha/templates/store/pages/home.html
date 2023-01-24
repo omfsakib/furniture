@@ -1,0 +1,174 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    #home .banner-img{
+        max-height: 649px;
+    }
+    #home .carousel-caption{
+        bottom: 170px;
+    }
+    #popular-furniture .mvcontent{
+        padding: 5px 25px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+    }
+    #popular-furniture .mvcontent:hover{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        transition: 0.2s;
+    }
+    #popular-furniture .category-content{
+        max-height: 300px;
+        overflow: auto;
+    }
+    #space-based-furniture .sbcontent a,
+    #office-furniture-categories .ofcontent a,
+    #interior-based-furniture .iecontent a{
+        color: brown;
+    }
+    #space-based-furniture .sbcontent a:hover,
+    #office-furniture-categories .ofcontent a:hover,
+    #interior-based-furniture .iecontent a:hover{
+        color: aqua;
+        transition: 0.5s;
+        text-decoration: none;
+    }
+    
+    .category-content{
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 50px;
+    }
+    .category-content .col-sm-2{
+        width: 150px;
+    }
+</style>
+<section id="home">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            {% for i in hbcimage %}
+            <div class="{% cycle 'carousel-item active' 'carousel-item' 'carousel-item' %}">
+                <a href="#"><img class="d-block w-100 banner-img" src="{{i.banner_img.url}}" alt="First slide"></a>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5 style="font-size: 35px;">{{i.title_heading}}</h5> <br>
+                    <a href="{% url 'noksha:category_view' i.estimated_category.id %}" class="btn btn-danger">Explore Now</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+        </a>
+    </div>
+</section> <br><br>
+<section id="popular-furniture">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="heading text-center">
+                    <h3>Popular Furniture By Choice</h3>
+                    <p>Categories our customers love to check out.</p>
+                </div> <br>
+            </div>
+        </div>
+        <div class="row category-content">
+            {% for i in mvCategorys %}
+            <div class="col-sm-2">
+                <a href="{% url 'noksha:sub_category_view' i.id %}">
+                    <button class="mvcontent">
+                        <img src="{{i.img.url}}" alt="{{i.name}}"> <br>
+                        <p>{{i.name}}</p>
+                    </button>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section><br><br>
+<section id="space-based-furniture">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="heading text-center">
+                    <h3>Buy Furniture Based on Space</h3>
+                    <p>Every Space has its unique needs.</p>
+                </div> <br>
+            </div>
+        </div>
+        <div class="row">
+            {% for i in ccimage %}
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <div class="sbcontent text-center">
+                    <img width="100%" src="{{i.img.url}}"  alt="{{i.estimated_category.name}}"> <br> <br>
+                    <p style="margin-bottom: 0px;">{{i.estimated_category.name}}</p>
+                    <a href="{% url 'noksha:category_view' i.estimated_category.id %}">EXPLORE NOW ></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section><br><br>
+<section id="office-furniture-categories">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="heading text-center">
+                    <h3>Office Furniture Categories</h3>
+                    <p>All a contemporary office should have.</p>
+                </div> <br>
+            </div>
+        </div>
+        <div class="row">
+            {% for i in sncimage %}
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <div class="ofcontent text-center">
+                    <img width="100%" src="{{i.img.url}}"  alt="{{i.estimated_category.name}}"> <br> <br>
+                    <p style="margin-bottom: 0px;">{{i.estimated_category.name}}</p>
+                    <a href="{% url 'noksha:category_view' i.estimated_category.id %}">EXPLORE NOW ></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section><br><br>
+<section id="interior-based-furniture">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="heading text-center">
+                    <h3>Buy Furniture Based on Interior & Exterior</h3>
+                    <p>Let's think smart and be the trendsetter.</p>
+                </div> <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6" style="margin-bottom: 20px;">
+                <div class="iecontent text-center">
+                    <img width="100%" src="{% static 'images/photo-1618221195710-dd6b41faaea6.jpg' %}"> <br> <br>
+                    <p style="margin-bottom: 0px;">Interior</p>
+                    <a href="#">EXPLORE NOW ></a>
+                </div>
+            </div>
+            <div class="col-sm-6" style="margin-bottom: 20px;">
+                <div class="iecontent text-center">
+                    <img width="100%" src="{% static 'images/download.jpg' %}"> <br> <br>
+                    <p style="margin-bottom: 0px;">Exterior</p>
+                    <a href="#">EXPLORE NOW ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><br><br>
+{% endblock %}

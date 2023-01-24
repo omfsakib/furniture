@@ -1,0 +1,282 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        
+	    $('.breadcrumb').before($('.heading-title'));
+        $('.account_image').hide();
+        $('.form-submit').hide();
+        $('.password_change_col').hide()
+        $('#input-payment-city').hide()
+        $('.city_modification').hide()
+        $('.billing_form-submit').hide()
+        $('#input-payment-city').keyup(function() {
+            $('#cityValue').val(this.value)
+        });
+        $('input[type=radio][name=city]').change(function() {
+            if (this.value == 'other') {
+                $('#input-payment-city').show(500)
+            }
+            else if(this.value == 'Dhaka') {
+                $('#input-payment-city').hide(500)
+            }
+        });
+        
+    })
+    function accountInputActivator(){
+        var inputs = document.querySelectorAll('.account_info .editable');
+        $('.account_info .editable').removeClass('input_modification');
+        $(inputs).removeAttr('disabled');
+        $('.account_image').show(500);
+        $('.account_created').hide(500);
+        $('.action_links').hide(500);
+        $('.form-submit').show(500);
+    }
+    function billingInputActivator(){
+        var inputs = document.querySelectorAll('.billing_details .editable');
+        $('.billing_details .editable').removeClass('input_modification');
+        $(inputs).removeAttr('disabled');
+        $('.demo_input_city').hide(500);
+        $('.city_modification').show(500);
+        $('.billing_action_links').hide(500);
+        $('.billing_form-submit').show(500);
+    }
+    function billingColDeactivation(){
+        var inputs = document.querySelectorAll('.billing_details .editable');
+        $('.billing_details .editable').addClass('input_modification');
+        $(inputs).attr('disabled','disabled');
+        $('.demo_input_city').show(500);
+        $('.city_modification').hide(500);
+        $('.billing_action_links').show(500);
+        $('.billing_form-submit').hide(500);
+    }
+    function accountInputDeactivator(){
+        var inputs = document.querySelectorAll('.account_info .editable');
+        $('.account_info .editable').addClass('input_modification');
+        $(inputs).attr('disabled','disabled');
+        $('.account_image').hide(500);
+        $('.account_created').show(500);
+        $('.action_links').show(500);
+        $('.form-submit').hide(500);
+    }
+    function passwordChangeColActivation(){
+        $('.account_info_col').hide(500);
+        $('.password_change_col').show(500);
+    }
+    function passwordChangeColDeactivation(){
+        $('.account_info_col').show(500);
+        $('.password_change_col').hide(500);
+    }
+
+</script>
+
+<style>
+    .breadcrumbs{
+        margin-bottom: 0px;
+    }
+    .account_img,
+    .account_links{
+        padding: 20px;
+    }
+    .account_img img{
+        max-height: 200px;
+        border: 1px solid #f6f6f6;
+        border-radius: 15%;
+    }
+    /* .account_links a{
+        font-size: 15px;
+    } */
+    .account_info,
+    .billing_details,
+    .password_change{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 20px;
+    }
+    .account_name,
+    .account_email,
+    .account_telephone,
+    .account_created,
+    .account_image,
+    .billing_address,
+    .billing_state,
+    .billing_city,
+    .old_password,
+    .new_password1,
+    .new_password2{
+        display: flex;
+        margin-bottom: 5px;
+    }
+    .account_info .account_created{
+        margin-bottom: 20px;
+    }
+    .account_name span,
+    .account_email span,
+    .account_telephone span,
+    .account_created span,
+    .account_image span,
+    .billing_address span,
+    .billing_state span,
+    .billing_city span{
+        width: 40%;    
+        margin-top: 6px;
+    }
+    .old_password span,
+    .new_password1 span,
+    .new_password2 span{
+        width: 50%;    
+        margin-top: 6px;
+        font-size: 10px;
+    }
+    .account_image input{
+        font-size: 10px;
+    }
+    .input_modification{
+        border:none;
+        background-color: #fff !important;
+        cursor: auto !important;
+        box-shadow: none;
+    }
+    .header-fix{
+        height: 100px;
+    }
+</style>
+<div class="header-fix"></div>
+<div class="container-fluid" style="margin-bottom: 20px; margin-top:0px">
+    <h2 class="heading-title">Profile</h2>
+    <div class="main">
+        <div class="row">
+            <div class="col-sm-4" style="display: flex; justify-content:center;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="account_img">
+                            <img src="{{request.user.customer.profile_pic.url}}" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="account_links">
+                            <div class="headers">
+                                <h2 style="font-size:25px;">Action Links</h2>
+                            </div>
+                            <div class="content">
+                                <a href="#user_dashboard">My orders({{status.total_orders}})</a> <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <form method="POST" enctype="multipart/form-data" class="account_info_col">
+                    {% csrf_token %}
+                    <div class="account_info">
+                        <div class="heading">
+                            <h2>Account Info</h2> <br> 
+                        </div>
+                        <div class="account_name"> 
+                            <span>Name: </span> 
+                            <input type="text" name="account_name" required class="form-control editable input_modification" value="{{request.user.first_name}} {{request.user.last_name}}" disabled="disabled">
+                        </div>
+                        <div class="account_email"> 
+                            <span>E-mail: </span> 
+                            <input type="text" name="account_email" required class="form-control editable input_modification" value="{{request.user.email}}" disabled="disabled">
+                        </div>
+                        <div class="account_telephone"> 
+                            <span>Telephone: </span> 
+                            <input type="text" name="account_telephone" required class="form-control editable input_modification" value="{{request.user.customer.phone }}" disabled="disabled">
+                        </div>
+                        <div class="account_image"> 
+                            <span>Change profile: </span>
+                            <input type="file" name="account_image" accept="image/*" class="form-control editable input_modification">
+                        </div>
+                        <div class="account_created"> 
+                            <span>Date joined: </span>
+                            <input type="text" class="form-control input_modification" value="{{request.user.customer.date_created|date:'M d, Y' }}" disabled="disabled">
+                        </div>
+                        <div class="action_links" style="align-self:center">
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="passwordChangeColActivation()">Change Password</button>
+                            <button type="button" class="btn btn-sm btn-info" onclick="accountInputActivator()">Edit Profile</button>
+                        </div>
+                        <div class="form-submit" style="align-self:center">
+                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                            <button type="button" class="btn btn-sm btn-dark" onclick="accountInputDeactivator()">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+                <form method="POST" class="password_change_col">
+                    {% csrf_token %}
+                    <div class="password_change">
+                        <div class="heading">
+                            <h2>Change Password </h2>
+                        </div>
+                        <div class="old_password">
+                            <span>Old password: </span>
+                            <input type="password" class="form-control" name="old_password" autocomplete="current-password" autofocus="" required  id="id_old_password">
+                        </div>
+                        <div class="new_password1">
+                            <span>New password: </span>
+                            <input type="password" class="form-control" name="new_password1" autocomplete="new-password" required  id="id_new_password1" aria-autocomplete="list">
+                        </div>
+                        <div class="new_password2">
+                            <span>Confirm new password: </span>
+                            <input type="password" class="form-control" name="new_password2" autocomplete="new-password" required  id="id_new_password2">
+                        </div>
+                        <div class="password_form-submit" style="align-self:center">
+                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                            <button type="button" class="btn btn-sm btn-dark" onclick="passwordChangeColDeactivation()">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="billing_details" id="billing_details">
+                        <div class="heading">
+                            <h2>Billing Info</h2>
+                        </div>
+                        <div class="billing_address">
+                            <span>Address: </span>
+                            <input type="text" name="address" class="form-control editable input_modification" required value="{{shipping.address}}" disabled="disabled">
+                        </div>
+                        <div class="billing_state">
+                            <span>Area: </span>
+                            <input type="text" name="state" class="form-control editable input_modification" required value="{{shipping.state}}" disabled="disabled">
+                        </div>
+                        <div class="billing_city">
+                            <span>City: </span>
+                            <input type="text" class="form-control demo_input_city input_modification" required value="{{shipping.city}}" disabled="disabled">
+                            <div class="city_modification" style="margin-left: -9%;">
+                                {% if shipping.city == 'Dhaka' %}
+                                <input type="radio" name="city"  value="{{shipping.city}}" style="margin-right:5px;" checked>Dhaka</input> <br>
+                                <input type="radio" name="city" id="cityValue" style="margin-right:5px;" value="other">Other</input>  <br>
+                                <input type="text"  placeholder="Enter City ...." id="input-payment-city" class="form-control">
+                                {% else %}
+                                <input type="radio" name="city"  value="Dhaka" style="margin-right:5px;">Dhaka</input> <br>
+                                <input type="radio" name="city"  value="{{shipping.city}}" style="margin-right:5px;" checked>{{shipping.city}}</input> <br>
+                                <input type="radio" name="city" id="cityValue" style="margin-right:5px;" value="other">Other</input>  <br>
+                                <input type="text"  placeholder="Enter City ...." id="input-payment-city" class="form-control">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="billing_action_links" style="align-self:center">
+                            <button type="button" class="btn btn-sm btn-info" onclick="billingInputActivator()">Edit Billing Address</button>
+                        </div>
+                        <div class="billing_form-submit" style="align-self:center">
+                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                            <button type="button" class="btn btn-sm btn-dark" onclick="billingColDeactivation()">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="container" id="user_dashboard">
+            {% include 'store/components/dashboard.html' %}
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

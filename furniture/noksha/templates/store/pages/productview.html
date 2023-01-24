@@ -1,0 +1,149 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+<style>
+    
+    .header-fix{
+        height: 100px;
+    }
+</style>
+<script>
+    function sizevalue(value){
+        var sizeValue = value;
+        var colorValue = $("#input-color").val();
+        if(sizeValue != 'not'){
+            document.querySelector('#button-cart').setAttribute("data-size",value);
+            $('#size_note').hide(500);
+            $('#and_note').hide(500);
+            if(colorValue != 'not'  && value != 'not'){
+                document.querySelector('#button-cart').removeAttribute('disabled','disabled')
+                $('#cart_note').hide(500)
+            }
+        }else{
+            if(colorValue != 'not'){
+                $('#size_note').show(500);
+                $('#and_note').hide(500);
+            }else{
+                $('#size_note').show(500);
+                $('#and_note').show(500);
+            }
+            document.querySelector('#button-cart').setAttribute('disabled','disabled');
+            $('#cart_note').show(500)
+        }
+    }
+    function colorvalue(value){
+        var colorValue = value;
+        var sizeValue = $("#input-size").val();
+        if(colorValue != 'not'){
+            $('#color_note').hide(500);
+            $('#and_note').hide(500);
+            document.querySelector('#button-cart').setAttribute("data-color",value);
+            if(sizeValue != 'not'  && value != 'not'){
+                document.querySelector('#button-cart').removeAttribute('disabled','disabled')
+                $('#cart_note').hide(500)
+            }
+        }else{
+            if(sizeValue != 'not'){
+                $('#color_note').show(500);
+                $('#and_note').hide(500);
+            }else{
+                $('#color_note').show(500);
+                $('#and_note').show(500);
+            }
+            document.querySelector('#button-cart').setAttribute('disabled','disabled')
+            $('#cart_note').show(500)
+        }
+    }
+    function qtyvalue(value){
+        if (value < minimum) {
+            alert("Minimum Quantity: "+minimum);
+            $("#input-quantity").val(minimum);
+            }
+    }
+    function qtyminus(){
+        var currentValue = parseInt($("#input-quantity").val());
+        if (currentValue <= 1){
+            alert("Minimum Quantity: "+ 1);
+        }
+        else{
+            var qtyValue = currentValue - 1
+            $("#input-quantity").val(qtyValue)
+            document.querySelector('#button-cart').setAttribute('data-quantity',qtyValue)
+        }
+    }
+    function qtyplus(){
+        var currentValue = parseInt($("#input-quantity").val());
+        var qtyValue = currentValue + 1
+        $("#input-quantity").val(qtyValue)
+        document.querySelector('#button-cart').setAttribute('data-quantity',qtyValue)
+    }
+</script>
+<div class="header-fix"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    {% for i in images %}
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="{% cycle 'active' '' '' '' '' '' ''%}"></li>
+                    {% endfor %}
+                </ol>
+                <div class="carousel-inner">
+                    {% for i in images %}
+                  <div class="{% cycle 'carousel-item active' 'carousel-item' 'carousel-item' 'carousel-item' 'carousel-item' 'carousel-item'%}">
+                    <img class="d-block w-100" src="{{i.n_img.url}}" alt="First slide">
+                  </div>
+                  {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="product-detail">
+                <h3>{{product.name}}</h3>
+                <p>{{product.product_code}}</p>
+                <h5>&#2547;{{product.price|floatformat:0}}</h5>
+                <p>Size : 
+                    <select class="form-control" id="input-size" onchange="sizevalue(this.value)">
+                        <option value="">Select size</option>
+                        {% for i in product.size.all %}
+                        <option value="{{i.size}}">{{i.size}}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <p>Color : 
+                    <select class="form-control" id="input-color" onchange="colorvalue(this.value)">
+                        <option value="">Select color</option>
+                        {% for i in product.color.all %}
+                        <option value="{{i.color}}">{{i.color}}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <p style="display: flex;justify-content: flex-start;">
+                    <button class="btn" onclick="qtyminus()"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                    <input type="text" name="quantity" value=1 class="form-control" style="width: 50px;" id="input-quantity">
+                    <button class="btn" onclick="qtyplus()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                </p>
+                <p><button type="btn" id="button-cart" data-quantity="1" data-product="{{product.id}}" data-action="add" class="btn btn-outline-info update-cart">Add to Cart</button></p>
+            </div>
+        </div>
+    </div> <br><br>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="heading text-center">
+                <h3>Description</h3>
+            </div>
+            <div class="description">
+                <p>{{product.description|linebreaks}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

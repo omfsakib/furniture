@@ -1,0 +1,596 @@
+/*
+ * jQuery FlexSlider v2.0
+ * http://www.woothemes.com/flexslider/
+ *
+ * Copyright 2012 WooThemes
+ * Free to use under the GPLv2 license.
+ * http://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * Contributing author: Tyler Smith (@mbmufffin)
+ */
+
+ 
+/* Browser Resets */
+.oc-banner7-container .flex-container a:active,
+.oc-banner7-container .flexslider a:active,
+.oc-banner7-container .flex-container a:focus,
+.oc-banner7-container .flexslider a:focus  {outline: none;}
+.oc-banner7-container .slides,
+.oc-banner7-container .flex-control-nav,
+.oc-banner7-container .flex-direction-nav {
+	margin: 0; 
+	padding: 0; 
+	list-style: none;
+} 
+
+/* FlexSlider Necessary Styles
+*********************************/ 
+.oc-banner7-container .flexslider {
+	margin: 0; 
+	padding: 0;
+}
+.oc-banner7-container .flexslider .slides > li {
+	display: none; 
+	-webkit-backface-visibility: hidden; 
+	position: relative; 
+} 
+/* Hide the slides before the JS is loaded. Avoids iocge jumping */
+.oc-banner7-container .flexslider .slides img {
+	display: block;
+}
+.oc-banner7-container .flex-pauseplay span {
+text-transform: capitalize;
+}
+
+/* Clearfix for the .slides element */
+.oc-banner7-container .slides:after {
+	content: "."; 
+	display: block; 
+	clear: both; 
+	visibility: hidden; 
+	line-height: 0;
+	height: 0;
+} 
+html[xmlns] .oc-banner7-container .slides {display: block;} 
+* html .oc-banner7-container .slides {height: 1%;}
+
+/* No JavaScript Fallback */
+/* If you are not using another script, such as Modernizr, ocke sure you
+ * include js that eliminates this class on page load */
+.no-js .oc-banner7-container .slides > li:first-child {display: block;}
+
+
+/* FlexSlider Default Theme
+*********************************/
+.oc-banner7-container .flexslider {
+	margin: 0 0 0px 0; 
+	position: relative; 
+	zoom: 1;
+}
+.oc-banner7-container .flex-viewport {
+	max-height: 2000px; 
+	-webkit-transition: all 1s ease; 
+	-moz-transition: all 1s ease; 
+	transition: all 1s ease;
+}
+.oc-banner7-container .loading .flex-viewport {
+	max-height: 300px;
+}
+.oc-banner7-container .flexslider .slides {zoom: 1;}
+
+.oc-banner7-container .carousel li {
+	margin-right: 5px
+}
+
+/* Control Nav */
+.nivo-controlNav {
+	text-align:center;
+	padding:0;
+}
+.nivo-controlNav a {
+	cursor:pointer;
+}
+.nivo-controlNav a.active {
+	font-weight:bold;
+}
+.oc-banner7-container .flex-control-nav,
+.nivo-controlNav {
+	width: 100%; 
+	position: absolute; 
+	bottom: 55px;  
+	text-align: center !important;
+	/* padding-left: 20px !important; */
+}
+.oc-banner7-container .flex-control-nav li { 
+	margin: 0 6px; 
+	display: inline-block; 
+	zoom: 1; 
+	display: inline; 
+}
+.oc-banner7-container .flex-control-paging li a,
+.nivo-controlNav a {
+	width: 11px; 
+	height: 11px; 
+	display: block; 
+	background: #aaa; 
+	cursor: pointer; 
+	text-indent: -9999px; 
+	-webkit-border-radius: 100%; 
+	-moz-border-radius: 100%; 
+	-o-border-radius: 100%; 
+	border-radius: 100%; 
+	box-shadow: inset 0 0 3px rgba(0,0,0,0.3); 
+	z-index: 9; 
+}
+.oc-banner7-container .flex-control-paging li a:hover,
+.oc-banner7-container .flex-control-paging li a.flex-active,
+.nivo-controlNav a:hover,
+.nivo-controlNav a.active {
+	cursor: pointer;
+}
+.oc-banner7-container .flex-control-thumbs {margin: 5px 0 0; position: static; overflow: hidden;}
+.oc-banner7-container .flex-control-thumbs li {width: 25%; float: left; margin: 0;}
+.oc-banner7-container .flex-control-thumbs img {width: 100%; display: block; opacity: .7; cursor: pointer;}
+.oc-banner7-container .flex-control-thumbs img:hover {opacity: 1;}
+.oc-banner7-container .flex-control-thumbs .flex-active {opacity: 1; cursor: default;}
+.oc-nivoslider {
+	/*overflow: hidden;*/
+}
+.nivoslider {
+	position: relative;
+	overflow: hidden;
+	height: auto;
+	width: 100%; 
+}
+.nivoslider img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+}
+.nivo-controlNav {
+    padding: 0px 0;
+    text-align: center;
+}
+.nivo-controlNav a {
+    background-color: #ffffff;
+    border: 0 none;
+    border-radius: 100%;
+    cursor: pointer;
+    display: inline-block;
+    height: 8px;
+    line-height: 8px;
+    margin: 0 3px;
+    position: relative;
+    text-indent: -9999px;
+    width: 8px;
+}
+.banner7-caption {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	background: none repeat scroll 0% 0% transparent;
+	color: #FFF;
+	font-size: 16px;
+	z-index: 8;
+}
+@-webkit-keyframes timeloading {
+  from {width: 0;}
+  to {width: 100%;}
+ }
+@keyframes timeloading {
+  from {width: 0;}
+  to {width: 100%;}
+ }
+.timeloading{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.2);
+	height: 5px;
+	animation: ease-in-out 0s normal none 1 running timeloading;
+	display: none;
+}
+.nivoSlider {
+	position:relative;
+	width:100%;
+	height:auto;
+	overflow: hidden;
+}
+.banner7-content {
+	height: 100%;
+	position: relative;
+}
+.banner7-content.slider-3 .text-content,
+.banner7-content.slider-2 .text-content,
+.banner7-content.slider-1 .text-content{
+	position: absolute;
+	top: 50%;
+	left: 15px;
+	right: 15px;
+	z-index: 2;
+	font-size: 16px;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+.banner7-content .title1,
+.banner7-content .sub-title {
+	margin: 0;
+}
+.banner7-content .banner7-des h5{
+	font-size: 12px;
+	font-weight: 600;
+	color: #292929;
+	text-transform: uppercase;
+	margin: 0;
+	line-height: 1.3;
+}
+.banner7-content .banner7-des h2{
+	font-size: 250%;
+	font-weight: 300;
+	text-transform: uppercase;
+	color: #3d4760;
+	margin: 90px 0 0;
+}
+.banner7-content .banner7-des h3{
+	font-size: 300%;
+	font-weight: 500;
+	color: #292929;
+	text-transform: capitalize;
+	margin: 0;
+}
+.banner7-content .banner7-des p{
+	font-size: 14px;
+	line-height: 24px;	
+	color: #292929;
+	letter-spacing: .025em;
+	margin: 35px 0 0;
+	padding: 0;
+	width: 50%;
+}
+.banner7-readmore{
+	position: relative;
+	z-index: 10;
+}
+.banner7-readmore a{
+	margin-top: 110px;
+	line-height: 54px;
+	padding: 0px 55px;
+}
+.banner7-content.slider-1 .banner7-readmore{
+	animation: slideInUp 0.5s linear alternate; 
+	-webkit-animation: slideInUp 0.5s linear alternate;
+	-moz-animation: slideInUp 0.5s linear alternate;
+}
+.banner7-content.slider-2 .banner7-readmore{
+	animation: slideInUp 0.5s linear alternate; 
+	-webkit-animation: slideInUp 0.5s linear alternate;
+	-moz-animation: slideInUp 0.5s linear alternate;
+}
+.banner7-content.slider-3 .banner7-readmore{
+	animation: slideInUp 0.5s linear alternate; 
+	-webkit-animation: slideInUp 0.5s linear alternate;
+	-moz-animation: slideInUp 0.5s linear alternate;
+}
+.banner7-content.slider-2 .title1{ 
+	animation: zoomIn 1s linear alternate; 
+	-webkit-animation: zoomIn 1s linear alternate;
+	-moz-animation: zoomIn 1s linear alternate;
+}
+.banner7-content.slider-1 .title1{ 
+	animation: rollIn 1s linear alternate; 
+	-webkit-animation: rollIn 1s linear alternate;
+	-moz-animation: rollIn 1s linear alternate;
+}
+.banner7-content.slider-3 .title1{ 
+	animation: fadeInLeft 1s linear alternate; 
+	-webkit-animation: fadeInLeft 1s linear alternate;
+	-moz-animation: fadeInLeft 1s linear alternate;
+}
+.banner7-content.slider-1 .banner7-des {
+	animation: slideInDown 2s linear alternate; 
+	-webkit-animation: slideInDown 2s linear alternate;
+	-moz-animation: slideInDown 2s linear alternate;
+}
+.banner7-content.slider-2 .banner7-des{
+	animation: bounceIn 2s linear alternate; 
+	-webkit-animation: bounceIn 2s linear alternate;
+	-moz-animation: bounceIn 2s linear alternate;
+}
+.banner7-content.slider-3 .banner7-des{
+	animation: fadeInLeft 1.5s linear alternate; 
+	-webkit-animation: fadeInLeft 1.5s linear alternate;
+	-moz-animation: fadeInLeft 1.5s linear alternate;
+}.banner7-content.slider-1 .sub-title  {
+	animation: slideInDown 2s linear alternate; 
+	-webkit-animation: slideInDown 2s linear alternate;
+	-moz-animation: slideInDown 2s linear alternate;
+}
+.banner7-content.slider-2 .sub-title {
+	animation: bounceIn 2s linear alternate; 
+	-webkit-animation: bounceIn 2s linear alternate;
+	-moz-animation: bounceIn 2s linear alternate;
+}
+.banner7-content.slider-3 .sub-title {
+	animation: rotateInDownRight 2s linear alternate; 
+	-webkit-animation: rotateInDownRight 2s linear alternate;
+	-moz-animation: rotateInDownRight 2s linear alternate;
+}
+/* The Nivo Slider styles */
+.nivoSlider {
+	position:relative;
+	width:100%;
+	height:auto;
+	overflow: hidden;
+}
+.nivoSlider img {
+	position:absolute;
+	top:0px;
+	left:0px;
+	max-width: none;
+}
+.nivo-main-image {
+	display: block !important;
+	position: relative !important; 
+	width: 100% !important;
+}
+
+/* If an image is wrapped in a link */
+.nivoSlider a.nivo-imageLink {
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	border:0;
+	padding:0;
+	margin:0;
+	z-index:8;
+	display:none;
+	background:white; 
+	filter:alpha(opacity=0); 
+	opacity:0;
+}
+/* The slices and boxes in the Slider */
+.nivo-slice {
+	display:block;
+	position:absolute;
+	z-index:5;
+	height:100%;
+	top:0;
+}
+.nivo-box {
+	display:block;
+	position:absolute;
+	z-index:5;
+	overflow:hidden;
+}
+.nivo-box img { display:block; }
+
+/* Caption styles */
+.nivo-caption {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	z-index: 8;
+}
+.nivo-caption .container{
+	
+}
+.nivo-caption p {
+	padding:5px;
+	margin:0;
+}
+
+.nivo-html-caption {
+    display:none;
+}
+/** ocslideshow **/
+.banner7{
+  position: relative;
+  z-index: 0;
+  margin-bottom: 30px;
+}
+.nivo-directionNav i{
+	font-size: 12px;
+	display: block;
+	line-height: 54px;
+	color: #9e9e9e
+}
+.oc-banner7-container .flex-direction-nav a,
+.nivo-directionNav a {
+	width: 60px; 
+	height: 60px;
+	margin: -30px 0 0;
+	display: block;
+	position: absolute;
+	cursor: pointer;
+	font-size: 0;
+	z-index: 9;  
+	background: #f7f7f9;
+	line-height: 54px;
+	text-align: center;
+	color: #fff;
+	top: 50%;
+	opacity: 0;
+	border: 3px solid #e1e1e1;
+	border-radius: 100%;
+}
+.oc-banner7-container .flex-direction-nav .flex-next,
+.oc-banner7-container .nivo-directionNav a.nivo-nextNav { 
+	transition: all 0.3s ease-out; 
+	right: 3.88888888%; 
+}
+.oc-banner7-container .flex-direction-nav .flex-prev,
+.oc-banner7-container .nivo-directionNav a.nivo-prevNav { 
+	left: 3.88888888%;  
+	transition: all 0.3s ease-out;
+}
+@media (max-width: 1400px){
+	.oc-banner7-container .flex-direction-nav .flex-next,
+	.oc-banner7-container .nivo-directionNav a.nivo-nextNav { 
+		right: 0px; 
+	}
+	.oc-banner7-container .flex-direction-nav .flex-prev,
+	.oc-banner7-container .nivo-directionNav a.nivo-prevNav { 
+		left: 0px;  
+	}
+}
+.oc-banner7-container:hover .nivo-controlNav a,
+.oc-banner7-container:hover .nivo-directionNav a{  
+	opacity:1;
+}
+.oc-banner7-container .flexslider .flex-next:hover, 
+.oc-banner7-container .nivo-directionNav a.nivo-nextNav:hover,
+.oc-banner7-container .flexslider .flex-prev:hover, 
+.oc-banner7-container .nivo-directionNav a.nivo-prevNav:hover { 
+	background: #292929;
+	border-color: #292929;	
+}
+.oc-banner7-container .flexslider .flex-next:hover i, 
+.oc-banner7-container .nivo-directionNav a.nivo-nextNav:hover i,
+.oc-banner7-container .flexslider .flex-prev:hover i, 
+.oc-banner7-container .nivo-directionNav a.nivo-prevNav:hover i{ 
+	color: #fff;
+}
+.oc-banner7-container .flex-direction-nav .flex-disabled {
+	opacity: .3!important; 
+	filter:alpha(opacity=30); 
+	cursor: default; 
+} 
+
+.oc-banner7-container .flex-direction-nav a:hover::before,
+.oc-banner7-container .nivo-directionNav a:hover::before{
+	/* color: #67D7BB; */
+}
+.oc-banner7-container .nivo-controlNav a {
+	border: none;
+	display: inline-block;
+	height: 3px;
+	margin: 0 5px;
+	font-size: 0;
+	width: 25px; 
+	cursor: pointer;
+	position: relative;
+	z-index: 9;
+	background: #fff;
+	box-shadow: none;
+	border-radius: 0;
+	font-size: 0;
+	opacity: 0;
+}
+.oc-banner7-container .nivo-controlNav a.active,
+.oc-banner7-container .nivo-controlNav a:hover {
+	background: #292929;
+}
+.oc-banner7-container .nivo-controlNav a:before {
+/* 	content:"";
+	display: block;
+	position: absolute;
+	background: #fff;
+	border-radius: 100%;
+	width: 100%;
+	height: 100%;
+	-webkit-transform: scale(0.6);
+	-moz-transform: scale(0.6);
+	-o-transform: scale(0.6);
+	transform: scale(0.6); */
+}
+/** /ocslideshow **/
+/* responsive */
+@media(max-width:1024px){
+	.banner7-content.slider-3 .text-content,
+	.banner7-content.slider-2 .text-content,
+	.banner7-content.slider-1 .text-content{
+		font-size: 90%
+	}
+	.banner7-content .banner7-des p{
+	}
+	.banner7-content .banner7-des h2{
+		margin: 30px 0 0;
+	}
+	.banner7-readmore a{
+		line-height: 36px;
+		height: 40px;
+		padding: 0px 35px;
+	}
+	.oc-banner7-container .flex-control-nav, .nivo-controlNav{
+		bottom: 20px;
+	}
+	.oc-banner7-container .flex-direction-nav a,
+	.nivo-directionNav a {
+		width: 50px; 
+		height: 50px;
+		margin: -25px 0 0;
+		line-height: 50px;
+	}
+	.nivo-directionNav i {
+		line-height: 44px;
+	}	
+}
+@media(max-width:991px){
+	.banner7-content.slider-3 .text-content,
+	.banner7-content.slider-2 .text-content,
+	.banner7-content.slider-1 .text-content{
+		/* font-size: 60% */
+	}
+	.banner7-content .banner7-des p{
+		width: 100%;
+		line-height: 1;
+	}
+	.banner7-readmore a{
+		margin-top: 40px;
+	}
+}
+@media(max-width:768px){
+	.banner7{
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+	.banner7-content.slider-3 .text-content,
+	.banner7-content.slider-2 .text-content,
+	.banner7-content.slider-1 .text-content{
+		font-size: 70%;
+		padding: 0 30px;
+	}
+	.banner7-content .banner7-des h5{
+		display: inline-block;
+		margin-right: 5px;
+	}
+}
+@media(max-width:767px){	
+	.banner7-content .banner7-des p{
+		width: 100%;
+	}
+	.nivo-controlNav,
+	.nivo-directionNav{
+		display: none;
+	}
+	.banner7-content.slider-3 .text-content,
+	.banner7-content.slider-2 .text-content,
+	.banner7-content.slider-1 .text-content{
+		left: 50%;
+		transform: translate(-50%,-50%);
+		width: 100%;
+	}	
+	.banner7-readmore a{
+		margin-top: 20px;
+	}
+}
+@media(max-width:560px){
+
+}
+@media(max-width:480px){
+	.banner7-content.slider-3 .text-content,
+	.banner7-content.slider-2 .text-content,
+	.banner7-content.slider-1 .text-content{
+		display: none;
+	}
+}

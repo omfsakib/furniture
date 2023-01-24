@@ -1,0 +1,573 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+<style>
+    .form-control{
+        max-width: 400px;
+    }
+    @media only screen and (max-width: 600px)  {
+        .form-control{
+            max-width: 220px;
+        }
+    }
+    .action-btns{
+        display: flex;
+        justify-content: flex-end;
+    }
+    .delete-review,
+    .delete-product{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 500px;
+        max-height: 200px;
+        background-color: #ddddddf5;
+        border: 1px solid #eee;
+        box-sizing: border-box;
+        padding: 10px;
+        z-index: 100;
+        display: none;    
+        border-radius: 20px;
+        /*to hide popup initially*/
+    }
+    .upload-images-container{
+        max-width: 500px;
+        width: 88%;
+        height: 88%;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ddddddf5;
+        border: 1px solid #eee;
+        box-sizing: border-box;
+        padding: 10px;
+        z-index: 100;
+        display: none;    
+        border-radius: 20px;
+    }
+    .close-btn {
+        position: absolute;
+        cursor: pointer;
+        right: 5px;
+        top: 5px;
+        font-size: 26px;
+        width: 26px;
+        background-color: black;
+        color: white;
+        border-radius: 50%;
+        padding: 4px;
+    }
+    .action_button{
+        display: flex;
+        justify-content: center;
+    }
+    .action-btns .btn:last-child,
+    .action_button .btn:last-child{
+        margin-left: 10px;
+    }
+    .action_button .btn:first-child{
+        margin-right: 10px;
+    }
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+    position: relative;
+    display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    margin-top: 5px;
+    width: auto;
+    min-width: 50px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 9999;    
+    margin-left: 15px;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content input {
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+    .dropdown-content span{
+        margin-right: 3px;
+        font-size: 13px;
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+<script>
+    $(document).ready(function(){
+        $('.edit-product').hide()
+    })
+    function toggleEditProduct(){
+        $('.show-product').hide(500)
+        $('.edit-product').show(500)
+    }
+    function toggleCancelEditProduct(){
+        $('.show-product').show(500)
+        $('.edit-product').hide(500)
+    }
+    function toggleDeletePopup(id) {
+        $('.delete').attr('value',id)
+        $(".delete-product").toggle();
+    }
+    function toggleReviewDeletePopup(id) {
+        $('.delete-rvw').attr('value',id)
+        $(".delete-review").toggle();
+    }
+    function productImageSetting(){
+        $(".upload-images-container").toggle();
+    }
+</script>
+<style>
+    .scroll-bar-image::-webkit-scrollbar {
+        display: none;
+    }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+    .scroll-bar-image {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    #myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    }
+
+    #myImg:hover {opacity: 0.7;}
+
+        /* The Modal (background) */
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (Image) */
+    .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    }
+
+    /* Add Animation - Zoom in the Modal */
+    .modal-content{
+    animation-name: zoom;
+    animation-duration: 0.6s;
+    }
+
+    @keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+    }
+
+    /* The Close Button */
+    .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    opacity: 1;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    }
+
+    /* 100% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px){
+    .modal-content {
+        width: 90%;
+    }
+    .close{
+        top:110px;
+        right: 15px;
+    }
+    .modal{
+        padding-top: 50%;
+    }
+    }
+    .images_container img{
+        max-width: 100px;
+        border: 1px solid #eee;
+        border-radius: 15px;
+    }
+</style>
+
+<div id="myModal" class="modal">
+
+    <!-- The Close Button -->
+    <span class="close">&times;</span>
+  
+    <!-- Modal Content (The Image) -->
+    <img class="modal-content" id="img01">
+  
+  </div>
+  
+<script>
+    
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("img01");
+
+    function imagePopUP(param) {
+        modal.style.display = "block";
+        modalImg.src = $(param).attr('src');
+    }
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+    modal.style.display = "none";
+    }
+</script>
+<div class="delete-product" style="overflow: auto;">
+    <div onclick="toggleDeletePopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to delete this product?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="product_delete" value="" class="btn btn-danger delete">Yes</button>
+            </form>
+            <button onclick="toggleDeletePopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="delete-review" style="overflow: auto;">
+    <div onclick="toggleReviewDeletePopup()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Delete</h3>
+            <h4>Are you sure to delete this review?</h4>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="review_delete" value="" class="btn btn-danger delete-rvw">Yes</button>
+            </form>
+            <button onclick="toggleReviewDeletePopup()" class="btn btn-info">No</button>
+        </div>
+    </div>
+</div>
+<div class="upload-images-container" style="overflow: auto;">
+    <div onclick="productImageSetting()" class="close-btn">
+        ×
+    </div>
+    <div class="content">
+        <div class="heading text-center">
+            <h3>Image Settings</h3>
+        </div><hr>
+        <div class="action_button" >
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" value="{{product.id}}" name="product_id">
+                <div class="form-group required">
+                    <label class="control-label" for="id_product_image">Image</label>
+                    <input type="file" name="product_image" id="id_product_image" class="form-control">
+                </div>
+                <div class="form-group required">
+                    <label class="control-label" for="id_product_image2">Zoom image</label>
+                    <input type="file" name="product_image2" id="id_product_image2" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-info"><i class="fa fa-plus" aria-hidden="true"> Upload</i></button>
+            </form>
+        </div>
+        <div class="remove-image-container">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Normal Img</th>
+                        <th>Zoom Img</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in images %}
+                    <tr class="images_container">
+                        <td><img src="{{i.n_img.url}}" alt=""></td>
+                        <td><img src="{{i.Z_img.url}}" alt=""></td>
+                        <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <button type="submit" name="image_delete" value="{{i.id}}" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="container" id="product-product">
+    <div class="row">
+        <div id="content" class="col-sm-12" >
+            <div class="row">
+                <div class="col-sm-12" style="margin-bottom: 10px;">
+                    <div class="action-btns" >
+                        <button class="btn btn-info show-product" onclick="toggleEditProduct()"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                        <button class="btn btn-primary edit-product" onclick="toggleCancelEditProduct()"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        <button type="button" data-toggle="tooltip"  class="btn btn-danger" onclick="toggleDeletePopup('{{product.id}}')" data-original-title="Delete">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 block-1 owl-style2">
+                    <div class="thumbnails">
+                        <a  class="thumbnail">
+                            {% for i in big_img %}
+                            <img data-zoom-image="{{i.Z_img.url}}" src="{{i.n_img.url}}" title="{{product.name}}" alt="{{product.name}}" />
+                            {% endfor %}
+                        </a>
+                    </div>		
+                    <div id="gallery_01" class="thumbnails-additional owl-carousel owl-theme">
+                        {% for j in images %}
+                        <a style="display: none" href="#" class="thumbnail elevatezoom-gallery " data-image="{{j.n_img.url}}" data-zoom-image="{{j.Z_img.url}}"  title="{{product.name}}">
+                            <img src="{{j.n_img.url}}" title="{{product.name}}" alt="{{product.name}}" />
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function() {
+                        var thumbnails_owl = $('#product-product .thumbnails-additional');	
+                        thumbnails_owl.on('initialize.owl.carousel initialized.owl.carousel ' +
+                            'initialize.owl.carousel initialize.owl.carousel ',
+                            function(e) {
+                            $("#product-product #gallery_01 .thumbnail").show();
+                            });
+                        thumbnails_owl.owlCarousel({
+                            items: 4,
+                            nav: true,
+                            dots: false,
+                            navSpeed: 1000,
+                            margin: 20,		
+                            navText : ['<i class="ion-chevron-left"></i>','<i class="ion-chevron-right"></i>'],				
+                        });	
+                        $("#product-product .thumbnails img").elevateZoom({		
+                            gallery : "gallery_01",
+                            galleryActiveClass: "active",
+                            borderColour: "#ee3333",
+                        });
+                        var thumbnails_additional = $('#product-product .thumbnails-additional .thumbnail');
+                        thumbnails_additional.each(function(){
+                            $(this).click(function(){
+                                thumbnails_additional.removeClass('current-additional');
+                                $(this).addClass('current-additional');
+                            });
+                        });
+                    });
+                </script>
+                <div class="col-sm-6 block-2">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <h1 class="product-name show-product">{{product.name}}</h1>
+                        <div class="edit-product" style="display: flex; justify-content: space-between;">
+                            <p style="margin: 7px 10px 10px;">Name : </p>
+                            <input type="text" class="form-control" name="name" value="{{product.name}}" placeholder="Product Name" required="" id="id_name">
+                        </div>
+                        <div class="ratings show-product">
+                            <div class="rating-box">
+                                {% if product.rate <= 0 %}
+                                <div class="rating0">rating</div>
+                                {% elif product.rate <= 1 %}
+                                <div class="rating1">rating</div>
+                                {% elif product.rate <= 2 %}
+                                <div class="rating2">rating</div>
+                                {% elif product.rate <= 3 %}
+                                <div class="rating3">rating</div>
+                                {% elif product.rate <= 4 %}
+                                <div class="rating4">rating</div>
+                                {% elif product.rate <= 5 %}
+                                <div class="rating5">rating</div>
+                                {% endif %}
+                            </div>
+                            <a href="#" onclick="$('a[href=\'#tab-review\']').trigger('click'); $('body,html').animate({scrollTop: $('.block-3 .nav-tabs').offset().top}, 800); return false;">{{total_review}} reviews</a> / <a href="#" onclick="$('a[href=\'#tab-review\']').trigger('click'); $('body,html').animate({scrollTop: $('.block-3 .nav-tabs').offset().top}, 800); return false;">Write a review</a>
+                        </div>													            
+                        <ul class="list-unstyled">
+                            <li class="price show-product">
+                                <span>&#2547;{{product.price}}</span>
+                            </li>
+                            <li class="price edit-product" style="display: flex; justify-content: space-between;">
+                                <p style="margin: 7px 10px 10px;">Price : </p>
+                                <input type="number" name="price" class="form-control" value="{{product.price}}" placeholder="Price" required="" id="id_price">
+                            </li>
+                        </ul>
+                        <ul class="list-unstyled">
+                            <li class="show-product">Product Code : <span class="ex-text">{{product.product_code}}</span></li>
+                            {% if product.stock > 0 %}
+                            <li class="show-product">Availability : <span class="ex-text">In Stock - {{product.stock}}</span></li>
+                            {% else %}
+                            <li class="show-product">Availability : <span class="ex-text">Out Of Stock - {{product.stock}}</span></li>
+                            {% endif %}
+                            <li class="show-product">Categorys  : {% for i in product.category.all %}| <strong>{{i.name}}</strong> |{% endfor %}</li>
+                            <li class="show-product">Available sizes : {% for i in product.size.all %}| <strong>{{i.size}}</strong> |{% endfor %}</li>
+                            <li class="show-product">Available colors : {% for i in product.color.all %}| <strong>{{i.color}}</strong> |{% endfor %}</li>
+                            <li class="edit-product" style="display: flex; justify-content: space-between;">
+                                <p style="margin: 7px 10px 10px;">Code: </p>
+                                <input type="text" name="product_code" class="form-control" value="{{product.product_code}}" placeholder="Product code" maxlength="200" required="" id="id_product_code">
+                            </li>
+                            <li class="edit-product" style="display: flex; justify-content: space-between;">
+                                <p style="margin: 7px 10px 10px;">Stock :  {{product.stock}} +</p>
+                                <input type="number" name="edit_product_stock" class="form-control" value="0">
+                            </li>
+                            <li class="edit-product" style="display: flex; justify-content: space-between;">
+                                <div class="categorys" style="display: flex; justify-content: space-between;">
+                                    <div class="dropdown">
+                                        <button type="button"  class="btn btn-secondary dropbtn" >Categorys <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                                        <div class="dropdown-content">
+                                            <div class="category_input">
+                                                {{form.category}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sizes" style="display: flex; justify-content: space-between;">
+                                    <div class="dropdown">
+                                        <button type="button"  class="btn btn-secondary dropbtn" >Sizes <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                                        <div class="dropdown-content">
+                                            <div class="category_input">
+                                                {{form.size}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="colors" style="display: flex; justify-content: space-between;">
+                                    <div class="dropdown">
+                                        <button type="button"  class="btn btn-secondary dropbtn" >Colors <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                                        <div class="dropdown-content">
+                                            <div class="category_input">
+                                                {{form.color}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="edit-product" style="display: flex; justify-content: space-between;">
+                            <p style="margin: 7px 10px 10px;">Description : </p>
+                            <textarea class="form-control" name="description" cols="40" rows="10" placeholder="Description" maxlength="2000" required="" id="id_description">{{product.description}}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success edit-product">Done</button>
+                    </form>
+                    <div class="upload_images show-product" style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button type="button" onclick="productImageSetting()" class="btn btn-info"><i class="fa fa-plus" aria-hidden="true"></i> Upload images</button>
+                        <button type="button" onclick="productImageSetting()" class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i> Remove images</button>
+                    </div>
+
+                </div>
+                <div class="block-3 col-sm-12">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#tab-description" data-toggle="tab">Description</a>
+                        </li>
+                        <li>
+                            <a href="#tab-review" data-toggle="tab">Reviews ({{total_review}})</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab-description">
+                            <div class="show-product">
+                                <p >{{product.description|safe|linebreaks}}</p>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-review">
+                            <div id="review">
+                                {% for review in reviews %}
+                                <table class="table table-striped table-bordered" style="table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 40%;"><strong>{{review.user.user.first_name}} {{review.user.user.last_name}}</strong></td>
+                                            <td class="text-right" style="width: 50%;">{{review.created_at}}</td>
+                                            <td class="text-right" style="width: 10%;">Action</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 40%;">
+                                                {{review.comment|linebreaks}}
+                                                
+                                                <div class="ratings" style="float: left;">
+                                                    <div class="rating-box">
+                                                        {% if review.rate <= 0 %}
+                                                        <div class="rating0">rating</div>
+                                                        {% elif review.rate <= 1 %}
+                                                        <div class="rating1">rating</div>
+                                                        {% elif review.rate <= 2 %}
+                                                        <div class="rating2">rating</div>
+                                                        {% elif review.rate <= 3 %}
+                                                        <div class="rating3">rating</div>
+                                                        {% elif review.rate <= 4 %}
+                                                        <div class="rating4">rating</div>
+                                                        {% elif review.rate <= 5 %}
+                                                        <div class="rating5">rating</div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div> 
+                                            </td>
+                                            <td style="max-width: 50%;overflow: auto;" class="scroll-bar-image">
+                                                <div class="row" style="display:inline-flex; margin-left:0px;">
+                                                    {% for i in review.images %}
+                                                    <div class="column" style="margin-right:10px;margin-left:5px"  >
+                                                        <img id="myImg" src="{{i}}" alt="" style="max-height: 80px; 
+                                                        max-width: 120px !important; border:1px solid #ebebeb; padding: 3px; border-radius: 5px;" 
+                                                    onclick="imagePopUP(this)">
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                            <td style="max-width: 10%;">
+                                                <button type="button" data-toggle="tooltip"  class="btn btn-danger" onclick="toggleReviewDeletePopup('{{review.id}}')" data-original-title="Delete">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

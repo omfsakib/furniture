@@ -1,0 +1,117 @@
+
+{% load static %}
+<script src="{% static 'catalog/view/javascript/jquery/jquery-2.1.1.min.js' %}" type="text/javascript"></script>
+<!-- <script src="{% static 'catalog/view/javascript/jquery/jquery-ui.min.js' %}" type="text/javascript"></script> -->
+<!-- <link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/jquery-ui.min.css' %}" rel="stylesheet"/> -->
+
+<!-- <script src="{% static 'catalog/view/javascript/jquery/jquery-ui.min.js' %}" type="text/javascript"></script> -->
+<!-- <script src="{% static 'catalog/view/javascript/opentheme/ocquickview/ocquickview.js' %}" type="text/javascript"></script> -->
+<!-- <link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/ocquickview/css/ocquickview.css' %}" rel="stylesheet" type="text/css" /> -->
+<script src="{% static 'catalog/view/javascript/jquery/owl-carousel/js/owl.carousel.min.js' %}" type="text/javascript"></script>
+<link href="{% static 'catalog/view/javascript/jquery/owl-carousel/css/owl.carousel.min.css' %}" rel="stylesheet" />
+<link href="{% static 'catalog/view/javascript/jquery/owl-carousel/css/owl.theme.green.min.css' %}" rel="stylesheet" />
+<script src="{% static 'catalog/view/javascript/jquery/elevatezoom/jquery.elevatezoom.js' %}" type="text/javascript"></script>
+<!-- <script src="{% static 'catalog/view/javascript/opentheme/countdown/jquery.plugin.min.js' %}" type="text/javascript"></script> -->
+<!-- <script src="{% static 'catalog/view/javascript/opentheme/countdown/jquery.countdown.min.js' %}" type="text/javascript"></script> -->
+<script src="{% static 'catalog/view/javascript/opentheme/hozmegamenu/custommenu.js' %}" type="text/javascript"></script>
+<script src="{% static 'catalog/view/javascript/opentheme/hozmegamenu/mobile_menu.js' %}" type="text/javascript"></script>
+<!-- <link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/countdown/jquery.countdown.css' %}" rel="stylesheet" /> -->
+<link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/hozmegamenu/css/custommenu.css' %}" rel="stylesheet" />
+<link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/css/animate.css' %}" rel="stylesheet" />
+<link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/layoutproducts/layoutproducts.css' %}" rel="stylesheet" />
+<link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/oclayerednavigation/css/oclayerednavigation.css' %}" rel="stylesheet" />
+
+<link href="{% static 'catalog/view/javascript/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen" />
+<script src="{% static 'catalog/view/javascript/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<link href="{% static 'catalog/view/javascript/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+
+<link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+<link href="//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/ocblog.css' %}">
+<link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/stylesheet.css' %}" rel="stylesheet">
+<link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/ocajaxlogin/css/ocajaxlogin.css' %}" type="text/css" rel="stylesheet" media="screen" />
+<link href="{% static 'catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css' %}" type="text/css" rel="stylesheet" media="screen" />
+<link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/ocslideshow/ocslideshow.css' %}" type="text/css" rel="stylesheet" media="screen" />
+<link href="{% static 'catalog/view/theme/tt_mimosa4/stylesheet/opentheme/ocpagebuilder.css' %}" type="text/css" rel="stylesheet" media="screen" />
+<script src="{% static 'catalog/view/javascript/opentheme/jquery.bpopup.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'catalog/view/javascript/opentheme/jquery.cookie.js' %}" type="text/javascript"></script>
+<!-- <script src="{% static 'catalog/view/javascript/opentheme/ocajaxlogin/ocajaxlogin.js' %}" type="text/javascript"></script> -->
+<script src="{% static 'catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'catalog/view/javascript/opentheme/ocslideshow/jquery.nivo.slider.js' %}" type="text/javascript"></script>
+<script src="{% static 'catalog/view/javascript/common.js' %}" type="text/javascript"></script>
+
+<link href="{% static 'images/favicon.png' %}" rel="icon" />
+<style>
+    
+#total-orders{
+    background-color: #4cb4c7;
+}
+#orders-delivered{
+    background-color: #7abecc ;
+}
+#orders-transit{
+    background-color:#40b8a1;
+}
+#orders-confirmed{
+    background-color: #73bfb0;
+}
+#orders-pending{
+    background-color: #70c8b7;
+}
+</style>
+
+<script>
+    var user = '{{request.user}}'
+    
+    function getToken(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+    }
+    const csrftoken = getToken('csrftoken');
+    
+    function getCookie(name) {
+        const cookieArr = document.cookie.split(";");
+        
+        for(var i = 0; i < cookieArr.length; i++){
+            const cookiePair = cookieArr[i].split("=");
+            
+            if(name == cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+        return null;
+    }
+    var cart = JSON.parse(getCookie('cart'))
+    
+    if(cart == undefined){
+        cart = {}
+        console.log("Cart was created")
+        document.cookie = 'cart=' + JSON.stringify(cart) + ";doamin=;path=/"
+    }
+    
+    console.log('Cart:', cart)
+
+    var cupon = JSON.parse(getCookie('cupon'))
+    
+    if(cupon == undefined){
+        cupon = {}
+        document.cookie = 'cupon=' + JSON.stringify(cupon) + ";doamin=;path=/"
+    }
+    
+    console.log('cupon:', cupon)
+
+</script>
